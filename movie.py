@@ -1,10 +1,14 @@
 from imdb import IMDb
+import pathlib
 from random import randrange
 
 
 class Movie:
 
-    local_datastore = "/home/john/git/movie_malarkey/dataset/title.basics.tsv"
+    # Get location of Movie Malarkey source (for proper retrival of stripped dataset)
+    movie_malarkey_loc = pathlib.Path(__file__).parent.absolute()
+    local_datastore = pathlib.Path.joinpath(movie_malarkey_loc, 'dataset/malarkey.tsv')
+
     ia = IMDb()
 
     def __init__(self, title: str, year: str, movie_id: str = None):
@@ -23,8 +27,8 @@ class Movie:
         self._imdbpy_movie = Movie.ia.get_movie(self.id)
 
     @property
-    def plot(self): 
-        return self._imdbpy_movie["plot"][0] if "plot" in self._imdbpy_movie else None
+    def plot(self):
+        return self._imdbpy_movie["plot"][0]
 
     @staticmethod
     def get_random():
@@ -40,27 +44,16 @@ class Movie:
 
             num_movies = len(movies)
 
-            title_type = None
-            found_plot = False
+            selected_index = randrange(num_movies - 1)
+            selected = movies[selected_index]
 
-            while title_type != "movie" and not found_plot:
-                selected_index = randrange(num_movies - 1)
-                selected = movies[selected_index]
+            movie_pieces = selected.split("\t")
 
-                movie_pieces = selected.split("\t")
-                title_type = movie_pieces[1]
+            movie_id = movie_pieces[0].split("tt")[-1]
+            movie_title = movie_pieces[2]
+            movie_year = str(movie_pieces[5])
 
-                if title_type != "movie":
-                    continue
-
-                movie_id = movie_pieces[0].split("tt")[-1]
-                movie_title = movie_pieces[2]
-                print(f"Checking {movie_title}...")
-                movie_year = str(movie_pieces[5])
-
-                movie = Movie(movie_title, movie_year, movie_id=movie_id)
-                movie.populate()
-
-                found_plot = "plot" in movie._imdbpy_movie
+            movie = Movie(movie_title, movie_year, movie_id=movie_id)
+            movie.populate()
 
             return movie
