@@ -1,11 +1,19 @@
 from flask import Flask
 
+from movie import Movie
+
 app = Flask(__name__)
 
 
 @app.route("/")
 def index():
-    return "<b>Congratulations</b>, it's a web app!"
+    m = Movie.get_random()
+    html = f"""
+    <h1 style="text-align: center;">{m.title} ({m.year})</h1>
+    <hr>
+    <p style="text-align: center;">{m.plot}</p>
+    """
+    return html
 
 
 if __name__ == "__main__":
