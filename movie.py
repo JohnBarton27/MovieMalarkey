@@ -28,7 +28,10 @@ class Movie:
 
     @property
     def plot(self):
-        return self._imdbpy_movie["plot"][0]
+        raw_plot = self._imdbpy_movie["plot"][0]
+
+        # Some plots seem to use '::' to credit the author of the plot summary
+        return raw_plot.split('::')[0]
 
     @staticmethod
     def get_random():
