@@ -47,7 +47,7 @@ with open(args.filepath, 'r') as input_dataset:
         valid_titles.append(title)
 
         # TODO remove temp early exit
-        if len(valid_titles) >= 10:
+        if len(valid_titles) >= 100:
             break
 
     print(f'Started with {len(all_titles)} titles, ended with {len(valid_titles)} usable movies.')
