@@ -9,7 +9,7 @@ parser.add_argument('filepath', help='Filepath of title.basics.tsv dataset from 
 
 args = parser.parse_args()
 
-# Get location of Movie Malarkey source (for proper placement of stripped dataset
+# Get location of Movie Malarkey source (for proper placement of stripped dataset)
 movie_malarkey_loc = pathlib.Path(__file__).parent.parent.absolute()
 
 with open(args.filepath, 'r') as input_dataset:
