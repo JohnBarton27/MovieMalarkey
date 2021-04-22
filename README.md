@@ -9,6 +9,7 @@ To run locally, you'll need the following installed:
 Run the following commands for first-time setup of your virtual environment:
 ```buildoutcfg
 # Create virtual environment
+sudo apt-get install python3-venv
 python3 -m venv venv
 
 # Activate virtual environment
