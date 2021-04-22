@@ -19,6 +19,14 @@ source venv/bin/activate
 python3 -m pip install -r requirements.txt
 ```
 
+### Dataset Loading
+**Movie Malarkey** requires an ingested dataset from IMDb. These datasets can be [downloaded from IMDb](https://datasets.imdbws.com/). The **title.basics.tsv.gz** dataset is the expected dataset.
+
+Download & unzip the dataset (`unzip title.basics.tsv.gz`), then ingest it to **Movie Malarkey** using the following command:
+```buildoutcfg
+python3 scripts/ingest_dataset.py PATH/TO/title.basics.tsv
+```
+
 ### Running
 To run locally, simply run the `main.py` script:
 ```
