@@ -34,3 +34,16 @@ python3 main.py
 ```
 
 This will launch the application at `localhost:8010` by default.
+
+## Development
+This section of the README covers development for Movie Malarkey.
+
+### Style & Conventions
+Where possible, follow [PEP 8](https://www.python.org/dev/peps/pep-0008/) conventions.
+
+### Unit tests
+Movie Malarkey is unit tested with Python's `unittest` framework. To run unit tests, run the following from Movie Malarkey's root directory:
+```
+python3 -m unittest discover test
+```
+This finds and automatically runs all unit tests in the `test` directory.
