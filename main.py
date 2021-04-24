@@ -24,10 +24,24 @@ def new_user():
 
 @app.route('/newRoom', methods=['POST'])
 def new_room():
-    user_name = User(request.cookies.get('user_name'))
-    room = Room(user_name)
+    user = User(request.cookies.get('user_name'))
+    room = Room(user)
     rooms.append(room)
     return render_template('room.html', room=room)
+
+
+@app.route('/joinRoom', methods=['POST'])
+def join_room():
+    user = User(request.cookies.get('user_name'))
+    form_data = request.form
+    room_code = form_data['Room_Code']
+
+    for room in rooms:
+        if room.code == room_code:
+            room.users.append(user)
+            return render_template('room.html', room=room)
+
+    return f'<h1>No room {room_code} found!</h1>'
 
 
 if __name__ == "__main__":

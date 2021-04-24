@@ -8,5 +8,10 @@
 <body style="text-align: center">
 <h1>Movie Malarkey - Room {{room.code}}</h1>
 <hr>
+<div id="userList">
+    {% for user in room.users %}
+        <p>{{user.name}}</p>
+    {% endfor %}
+</div>
 </body>
 </html>
