@@ -70,6 +70,20 @@ class TestRoom(unittest.TestCase):
                                    call(possible_chars)])
         self.assertEqual(code, '1A2B')
 
+    def test_add_user_new_user(self):
+        room = Room(TestRoom.user1)
+        user2 = User('Jessica')
+
+        room.add_user(user2)
+        self.assertEqual(room.users, [TestRoom.user1, user2])
+
+    def test_add_user_existing_user(self):
+        room = Room(TestRoom.user1)
+        user2 = User('User123')
+
+        room.add_user(user2)
+        self.assertEqual(room.users, [TestRoom.user1])
+
 
 if __name__ == '__main__':
     unittest.main()

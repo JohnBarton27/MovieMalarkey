@@ -38,7 +38,7 @@ def join_room():
 
     for room in rooms:
         if room.code == room_code:
-            room.users.append(user)
+            room.add_user(user)
             return render_template('room.html', room=room)
 
     return f'<h1>No room {room_code} found!</h1>'

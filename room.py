@@ -32,6 +32,19 @@ class Room:
     def __hash__(self):
         return hash(self.code)
 
+    def add_user(self, user: User):
+        """
+        Add the given user to this Room (handles ensuring no duplicate users)
+
+        Args:
+            user (User): User to add to this room
+
+        Returns:
+            None
+        """
+        if user not in self.users:
+            self.users.append(user)
+
     @staticmethod
     def generate_code():
         """
