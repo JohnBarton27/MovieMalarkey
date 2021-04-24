@@ -1,2 +1,3 @@
 Flask==1.1.2
 imdbpy==2021.04.18
+flask_socketio==5.0.1
