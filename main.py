@@ -38,13 +38,13 @@ def join_malarkey_room():
     form_data = request.form
     room_code = form_data['Room_Code']
 
-	room = Room.get_room(room_code)
-	if room is not None:
-		room.add_user(user)
-		resp = make_response(render_template('room.html', room=room))
-		resp.set_cookie('room', room.code)
+    room = Room.get_room(room_code)
+    if room is not None:
+        room.add_user(user)
+        resp = make_response(render_template('room.html', room=room))
+        resp.set_cookie('room', room.code)
 
-		return resp           
+        return resp           
     return f'<h1>No room {room_code} found!</h1>'
 
 
@@ -53,8 +53,8 @@ def connect(data):
     user = User(request.cookies.get('user_name'))
     room = Room.get_room(request.cookies.get('room'))
     
-	if room is not None:
-		print(f'{user.name} joined {room.code}')
+    if room is not None:
+        print(f'{user.name} joined {room.code}')
 
 
 @socketio.on('disconnect')
