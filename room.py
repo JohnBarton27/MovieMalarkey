@@ -9,7 +9,7 @@ class Room:
     Class for representing "Rooms"
     """
     __rooms = {}
-
+    
     def __init__(self, creator: User):
         """
         Initializer for a Room object
@@ -20,8 +20,7 @@ class Room:
         self.host = creator
         self.users = [creator]
         self.code = Room.__generate_code()
-        
-
+    
     def __repr__(self):
         return self.code
 
@@ -71,32 +70,32 @@ class Room:
         elif self.host == user:
             # Only change the host if there are other users still in the room
             self.host = self.users[0]
-            
+    
     # TODO: add check to make sure only current host is invoking this method (might be better to do outside this class)
     def change_host(self, new_host: User):
-    """
-    Change the room host to the given user that is already in the room
-    
-    Args:
-        new_host (User): User in the room to make the host
+        """
+        Change the room host to the given user that is already in the room
         
-    Returns:
-        (User): the old host
-    """
+        Args:
+            new_host (User): User in the room to make the host
+            
+        Returns:
+            (User): the old host
+        """
         old_host = self.host
         if new_host in self.users:
             self.host = new_host
         return old_host
-            
+    
     # TODO: Should this just be a destructor? Don't remember if that's a thing in python
     def close_room(self):
         """
         Closes this room
         """
-        del __rooms[self.code]
+        del Room.__rooms[self.code]
         # TODO: whatever else needs to be done when closing a room
         return
-        
+    
     @staticmethod
     def new_room(creator: User):
         """
@@ -109,9 +108,9 @@ class Room:
             (Room): newly created room
         """
         room = Room(creator)
-        __rooms[room.code] = room
+        Room.__rooms[room.code] = room
         return room
-
+    
     @staticmethod
     def __generate_code():
         """
@@ -125,10 +124,10 @@ class Room:
             chars += str(i)
 
         code = ''.join(random.choice(chars) for i in range(4))
-        while code in __rooms:
+        while code in Room.__rooms:
             code = ''.join(random.choice(chars) for i in range(4))
         return code
-        
+    
     #TODO: Maybe make this a property getter (currently not sure if that works with @staticmethod)
     @staticmethod
     def get_rooms():
@@ -142,8 +141,8 @@ class Room:
             (dict<string, Room>): Dictionary of all the rooms that are open
         """
         # TODO: make this return a readonly copy
-        return __rooms
-        
+        return Room.__rooms
+    
     @staticmethod
     def get_room(code):
         """
@@ -155,5 +154,5 @@ class Room:
         Returns:
             (Room): the room with the given code, or None if it does not exist
         """
-        return __rooms.get(code, None)
-        
+        return Room.__rooms.get(code, None)
+    
