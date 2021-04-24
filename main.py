@@ -17,8 +17,7 @@ def index():
 
 @app.route('/roomSearch', methods=['POST'])
 def new_user():
-    form_data = request.form
-    user = User(form_data['Nickname'])
+    user = User(request.args.get('nickname'))
     resp = make_response(render_template('roomSearch.html', user=user))
     resp.set_cookie('user_name', user.name)
     return resp

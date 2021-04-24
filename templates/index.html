@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script type="application/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
     <meta charset="UTF-8">
     <title>Movie Malarkey</title>
 </head>
@@ -9,10 +14,6 @@
 <h1>Welcome to Movie Malarkey!</h1>
 <p><strong>Movie Malarkey</strong> is a collaborative and creative online multiplayer game. Take your best shot at coming up with an obscure film's plot based on only its title.</p>
 <hr>
-<form action="/roomSearch" method="POST">
-    <label for="nickname">Enter nickname:</label>
-    <input id="nickname" name="Nickname" type="text"/>
-    <input type="submit" value="Join"/>
-</form>
+<div id="main"></div>
 </body>
 </html>
