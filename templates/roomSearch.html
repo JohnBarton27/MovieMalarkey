@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <meta charset="UTF-8">
+    <title>Movie Malarkey - Rooms</title>
+</head>
+<body style="text-align: center">
+<h1>Welcome to Movie Malarkey, {{nickname}}!</h1>
+<hr>
+<p>From here, you can either <strong>create a new room</strong> or <strong>join an existing one</strong> (if you have the room code!)</p>
+
+<table style="width:50%; margin: auto;">
+    <tr>
+        <td style="width:50%;">
+            <h2>New Room</h2>
+            <form action="/newRoom" method="POST">
+                <input type="submit" value="Create Room"/>
+            </form>
+        </td>
+        <td style="width:50%;">
+            <h2>Join Existing Room</h2>
+            <form action="/joinRoom" method="POST">
+                <label for="room-code">Room Code:</label>
+                <input id="room-code" name="Room_Code" type="text"/>
+                <input type="submit" value="Join"/>
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

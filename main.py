@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, make_response, render_template, request
 
 from movie import Movie
+from room import Room
 from user import User
 
 app = Flask(__name__, template_folder='templates')
@@ -15,7 +16,16 @@ def index():
 def new_user():
     form_data = request.form
     user = User(form_data['Nickname'])
-    return user.name
+    resp = make_response(render_template('roomSearch.html', nickname=user.name))
+    resp.set_cookie('user_name', user.name)
+    return resp
+
+
+@app.route('/newRoom', methods=['POST'])
+def new_room():
+    user_name = User(request.cookies.get('user_name'))
+    room = Room(user_name)
+    return render_template('room.html', room_code=room.code)
 
 
 if __name__ == "__main__":
