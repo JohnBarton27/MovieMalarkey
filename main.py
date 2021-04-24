@@ -7,8 +7,6 @@ from user import User
 
 app = Flask(__name__, template_folder='templates')
 socketio = SocketIO(app)
-rooms = []
-
 
 @app.route('/')
 def index():
@@ -27,8 +25,7 @@ def new_user():
 @app.route('/newRoom', methods=['POST'])
 def new_room():
     user = User(request.cookies.get('user_name'))
-    room = Room(user)
-    rooms.append(room)
+    room = Room.new_room(user)
 
     resp = make_response(render_template('room.html', room=room))
     resp.set_cookie('room', room.code)
@@ -41,27 +38,23 @@ def join_malarkey_room():
     form_data = request.form
     room_code = form_data['Room_Code']
 
-    for room in rooms:
-        if room.code == room_code:
-            room.add_user(user)
-            resp = make_response(render_template('room.html', room=room))
-            resp.set_cookie('room', room.code)
+    room = Room.get_room(room_code)
+    if room is not None:
+        room.add_user(user)
+        resp = make_response(render_template('room.html', room=room))
+        resp.set_cookie('room', room.code)
 
-            return resp
-
+        return resp           
     return f'<h1>No room {room_code} found!</h1>'
 
 
 @socketio.on('join')
 def connect(data):
     user = User(request.cookies.get('user_name'))
-    room = None
-    for open_room in rooms:
-        print(open_room.code)
-        if open_room.code == request.cookies.get('room'):
-            room = open_room
-            break
-    print(f'{user.name} joined {room.code}')
+    room = Room.get_room(request.cookies.get('room'))
+    
+    if room is not None:
+        print(f'{user.name} joined {room.code}')
 
 
 @socketio.on('disconnect')
