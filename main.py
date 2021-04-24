@@ -51,16 +51,17 @@ def join_malarkey_room():
     return f'<h1>No room {room_code} found!</h1>'
 
 
-# @socketio.on('join')
-# def connect(data):
-#     user = User(request.cookies.get('user_name'))
-#     room = None
-#     for open_room in rooms:
-#         print(open_room.code)
-#         if open_room.code == request.cookies.get('room'):
-#             room = open_room
-#             break
-#     print(f'{user.name} joined {room.code}')
+@socketio.on('join_room')
+def connect(data):
+    user = User(request.cookies.get('user_name'))
+    current_code = data['room']
+
+    for open_room in rooms:
+        if open_room.code == current_code:
+            room = open_room
+            join_room(room)
+            print(f'{user.name} joined {room.code}')
+            break
 
 
 @socketio.on('disconnect')

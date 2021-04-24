@@ -18,7 +18,7 @@
 <script type="text/javascript" charset="utf-8">
     var socket = io();
     socket.on('connect', function() {
-        socket.emit('join', {'username' : 'TEST', 'room' : 'ABCD' });
+        socket.emit('join_room', { room: "{{room.code}}"});
     });
 </script>
 
