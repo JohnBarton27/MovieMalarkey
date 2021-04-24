@@ -16,7 +16,7 @@ def index():
 def new_user():
     form_data = request.form
     user = User(form_data['Nickname'])
-    resp = make_response(render_template('roomSearch.html', nickname=user.name))
+    resp = make_response(render_template('roomSearch.html', user=user))
     resp.set_cookie('user_name', user.name)
     return resp
 
@@ -25,7 +25,7 @@ def new_user():
 def new_room():
     user_name = User(request.cookies.get('user_name'))
     room = Room(user_name)
-    return render_template('room.html', room_code=room.code)
+    return render_template('room.html', room=room)
 
 
 if __name__ == "__main__":
