@@ -1,20 +1,21 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 from movie import Movie
+from user import User
 
 app = Flask(__name__, template_folder='templates')
 
 
-@app.route("/")
+@app.route('/')
 def index():
-    # m = Movie.get_random()
-    # html = f"""
-    # <h1 style="text-align: center;">{m.title} ({m.year})</h1>
-    # <hr>
-    # <p style="text-align: center;">{m.plot}</p>
-    # """
-    # return html
     return render_template('index.html')
+
+
+@app.route('/roomSearch', methods=['POST'])
+def new_user():
+    form_data = request.form
+    user = User(form_data['Nickname'])
+    return user.name
 
 
 if __name__ == "__main__":
