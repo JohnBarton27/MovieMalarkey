@@ -5,6 +5,7 @@ from room import Room
 from user import User
 
 app = Flask(__name__, template_folder='templates')
+rooms = []
 
 
 @app.route('/')
@@ -25,6 +26,7 @@ def new_user():
 def new_room():
     user_name = User(request.cookies.get('user_name'))
     room = Room(user_name)
+    rooms.append(room)
     return render_template('room.html', room=room)
 
 
