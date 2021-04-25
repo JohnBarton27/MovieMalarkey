@@ -66,6 +66,7 @@ class Room:
         return {
             'code': self.code,
             'host': self.host.serialize(),
+            'started': str(self.started),
             'users': [user.serialize() for user in self.users]
         }
 

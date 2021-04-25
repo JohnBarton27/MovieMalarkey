@@ -95,6 +95,7 @@ class TestRoom(unittest.TestCase):
         correct_serialized = {
             'code': 'ABCD',
             'host': {'name': 'USER1'},
+            'started': 'False',
             'users': [{'name': 'USER1'}]
         }
 
@@ -119,6 +120,7 @@ class TestRoom(unittest.TestCase):
         room.stop()
 
         self.assertFalse(room.started)
+
 
 if __name__ == '__main__':
     unittest.main()
