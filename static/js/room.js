@@ -10,7 +10,7 @@ function initSockets() {
     });
 
     socket.on('json', function(data) {
-        if (data["event"] == "new-user" && data["username"] != myUsername) {
+        if (data["event"] == "new-user") {
             userListElem.append(`<li>${data["username"]}</li>`);
         }
     });

@@ -39,7 +39,9 @@ def check_room_code():
     room_code = request.args.get('code')
     for room in rooms:
         if room.code == room_code:
-            return 'true'
+            resp = make_response('true')
+            resp.set_cookie('room', room.code)
+            return resp
 
     return 'false'
 

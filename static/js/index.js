@@ -26,7 +26,7 @@ function searchRoom() {
     $.get('/checkRoomCode?code=' + roomCode, function(responseText) {
         if (responseText === 'true') {
             roomNotFoundElem.html('');
-            // TODO redirect to Room
+            window.location.href = '/play';
         } else {
             roomNotFoundElem.html(`Could not find room with code ${roomCode}!`);
         }
