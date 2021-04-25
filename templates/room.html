@@ -17,8 +17,13 @@
 <body style="text-align: center">
 <h1>Movie Malarkey - Room {{room.code}}</h1>
 <hr>
-<ul id="userList"></ul>
-
+<div class="row">
+    <div class="column-large"></div>
+    <div class="column-small">
+        <h3><u>Users</u></h3>
+        <ul id="userList"></ul>
+    </div>
+</div>
 <script type="application/javascript">
     $(document).ready(function() {
         let room = JSON.parse('{{room|tojson}}');

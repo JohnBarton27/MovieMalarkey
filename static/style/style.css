@@ -47,3 +47,25 @@ body {
 table td, table td * {
     vertical-align: top;
 }
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
+
+.column-large {
+    flex: 67%;
+}
+
+.column-small {
+    flex: 33%;
+}
