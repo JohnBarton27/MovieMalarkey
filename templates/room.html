@@ -9,6 +9,7 @@
     <!-- Socket IO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
 
+    <script type="application/javascript" src="{{ url_for('static', filename='js/room.js') }}"></script>
     <meta charset="UTF-8">
     <meta id="room-data" data-code="{{room.code}}">
     <title>Movie Malarkey - Room</title>
@@ -16,12 +17,13 @@
 <body style="text-align: center">
 <h1>Movie Malarkey - Room {{room.code}}</h1>
 <hr>
-<ul id="userList">
-    {% for user in room.users %}
-        <li>{{user.name}}</li>
-    {% endfor %}
-</ul>
+<ul id="userList"></ul>
 
-<script type="application/javascript" src="{{ url_for('static', filename='js/room.js') }}"></script>
+<script type="application/javascript">
+    $(document).ready(function() {
+        let room = JSON.parse('{{room|tojson}}');
+        setRoom(room);
+    });
+</script>
 </body>
 </html>

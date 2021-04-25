@@ -25,3 +25,6 @@ class User:
 
     def __hash__(self):
         return hash(self.name)
+
+    def serialize(self):
+        return {'name': self.name}

@@ -1,17 +1,19 @@
 let userListElem = null;
 
 let room = null;
+let room_code = null;
 let myUsername = null;
+let userList = null;
 
 function initSockets() {
     let socket = io();
     socket.on('connect', function() {
-        socket.emit('join_room', { room: room.code});
+        socket.emit('join_room', { 'room': room_code });
     });
 
     socket.on('json', function(data) {
         if (data["event"] == "new-user") {
-            userListElem.append(`<li>${data["username"]}</li>`);
+            setRoom(data['room']);
         }
     });
 }
@@ -27,11 +29,25 @@ function readCookie(name) {
     return null;
 }
 
+function updateUserList() {
+    let userListHtml = '';
+    $.each(room.users, function() {
+        userListHtml += `<li>${this.name}</li>`;
+    });
+    userListElem.html(userListHtml);
+}
+
+function setRoom(inlineRoom) {
+    room = inlineRoom;
+    updateUserList();
+}
+
 $(document).ready(function() {
     // JQuery selectors
     userListElem = $("#userList");
 
+    room_code = $("#room-data").data().code;
+
     myUsername = readCookie("user_name")
-    room = $("#room-data").data();
     initSockets();
 });

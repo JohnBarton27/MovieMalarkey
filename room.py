@@ -60,3 +60,10 @@ class Room:
         code = ''.join(random.choice(chars) for i in range(4))
         # TODO ensure code is not already in use
         return code
+
+    def serialize(self):
+        return {
+            'code': self.code,
+            'host': self.host.serialize(),
+            'users': [user.serialize() for user in self.users]
+        }
