@@ -2,25 +2,26 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Socket IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+
     <meta charset="UTF-8">
+    <meta id="room-data" data-code="{{room.code}}">
     <title>Movie Malarkey - Room</title>
 </head>
 <body style="text-align: center">
 <h1>Movie Malarkey - Room {{room.code}}</h1>
 <hr>
-<div id="userList">
+<ul id="userList">
     {% for user in room.users %}
-        <p>{{user.name}}</p>
+        <li>{{user.name}}</li>
     {% endfor %}
-</div>
+</ul>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-<script type="text/javascript" charset="utf-8">
-    var socket = io();
-    socket.on('connect', function() {
-        socket.emit('join_room', { room: "{{room.code}}"});
-    });
-</script>
-
+<script type="application/javascript" src="{{ url_for('static', filename='js/room.js') }}"></script>
 </body>
 </html>

@@ -10,11 +10,10 @@
         </td>
         <td style="width:50%;">
             <h2>Join Existing Room</h2>
-            <form action="/joinRoom" method="POST">
-                <label for="room-code">Room Code:</label>
-                <input id="room-code" name="Room_Code" type="text"/>
-                <input type="submit" value="Join"/>
-            </form>
+            <label for="room-code">Room Code:</label>
+            <input id="room-code" name="Room_Code" type="text"/>
+            <input type="submit" onclick="searchRoom()" value="Join"/>
+            <div id="roomNotFound"></div>
         </td>
     </tr>
 </table>

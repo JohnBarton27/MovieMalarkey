@@ -43,3 +43,7 @@ body {
     background-color: #F1FAEE;
     font-family: Nunito;
 }
+
+table td, table td * {
+    vertical-align: top;
+}

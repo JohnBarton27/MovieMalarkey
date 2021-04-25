@@ -34,6 +34,29 @@ def new_room():
     return resp
 
 
+@app.route('/checkRoomCode')
+def check_room_code():
+    room_code = request.args.get('code')
+    for room in rooms:
+        if room.code == room_code:
+            return 'true'
+
+    return 'false'
+
+
+@app.route('/play')
+def enter_room():
+    user = User(request.cookies.get('user_name'))
+    room_code = request.cookies.get('room')
+
+    for room in rooms:
+        if room.code == room_code:
+            resp = make_response(render_template('room.html', room=room))
+            return resp
+
+    return f'<h1>No room {room_code} found!</h1>'
+
+
 @app.route('/joinRoom', methods=['POST'])
 def join_malarkey_room():
     user = User(request.cookies.get('user_name'))
@@ -60,7 +83,7 @@ def connect(data):
         if open_room.code == current_code:
             room = open_room
             join_room(room.code)
-            send(f'{user.name} has entered the room.', to=room.code)
+            send({'event': 'new-user', 'username': user.name}, json=True, to=room.code)
 
             print(f'{user.name} joined {room.code}')
             break
