@@ -54,6 +54,9 @@ def start_game():
         if room.code == room_code:
             room.start()
             resp = make_response(room.serialize())
+
+            socketio.send({'event': 'start-game', 'room': room.serialize()}, json=True, to=room.code)
+
             return resp
 
     return 'Room not found'

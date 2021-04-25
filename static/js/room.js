@@ -15,6 +15,8 @@ function initSockets() {
     socket.on('json', function(data) {
         if (data["event"] == "new-user") {
             setRoom(data['room']);
+        } else if (data['event'] == "start-game") {
+            setRoom(data['room']);
         }
     });
 }
