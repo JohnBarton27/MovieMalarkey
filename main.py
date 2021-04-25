@@ -1,5 +1,5 @@
 from flask import Flask, make_response, render_template, request
-from flask_socketio import SocketIO, join_room, leave_room, send
+from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
 from movie import Movie
 from room import Room
@@ -59,7 +59,9 @@ def connect(data):
     for open_room in rooms:
         if open_room.code == current_code:
             room = open_room
-            join_room(room)
+            join_room(room.code)
+            send(f'{user.name} has entered the room.', to=room.code)
+
             print(f'{user.name} joined {room.code}')
             break
 
