@@ -29,7 +29,7 @@ def new_room():
     room = Room(user)
     rooms.append(room)
 
-    resp = make_response(render_template('room.html', room=room))
+    resp = make_response(room.code)
     resp.set_cookie('room', room.code)
     return resp
 

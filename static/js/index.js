@@ -21,6 +21,13 @@ function submitName() {
     });
 }
 
+function createRoom() {
+    $.post("/newRoom", function(responseText) {
+        let room_code = responseText;
+        window.location.href = '/play';
+    });
+}
+
 function searchRoom() {
     let roomCode = roomCodeElem.val();
     $.get('/checkRoomCode?code=' + roomCode, function(responseText) {
