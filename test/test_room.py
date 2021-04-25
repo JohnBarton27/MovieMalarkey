@@ -21,6 +21,7 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(room.host, TestRoom.user1)
         self.assertEqual(room.users, [TestRoom.user1])
         self.assertEqual(room.code, 'AB27')
+        self.assertFalse(room.started)
 
     def test_repr(self):
         room = Room(TestRoom.user1)
@@ -84,6 +85,23 @@ class TestRoom(unittest.TestCase):
         room.add_user(user2)
         self.assertEqual(room.users, [TestRoom.user1])
 
+    def test_start(self):
+        room = Room(TestRoom.user1)
+
+        # Room should not be started upon __init__
+        self.assertFalse(room.started)
+
+        room.start()
+
+        self.assertTrue(room.started)
+
+    def test_stop(self):
+        room = Room(TestRoom.user1)
+        room.start()
+
+        room.stop()
+
+        self.assertFalse(room.started)
 
 if __name__ == '__main__':
     unittest.main()

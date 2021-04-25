@@ -19,6 +19,7 @@ class Room:
         self.host = creator
         self.users = [creator]
         self.code = Room.generate_code()
+        self.started = False
 
     def __repr__(self):
         return self.code
@@ -67,3 +68,21 @@ class Room:
             'host': self.host.serialize(),
             'users': [user.serialize() for user in self.users]
         }
+
+    def start(self):
+        """
+        Starts a game in this room
+
+        Returns:
+            None
+        """
+        self.started = True
+
+    def stop(self):
+        """
+        Stops/Ends the game in this room
+
+        Returns:
+            None
+        """
+        self.started = False
