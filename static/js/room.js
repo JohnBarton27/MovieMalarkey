@@ -4,6 +4,7 @@ let room = null;
 let room_code = null;
 let myUsername = null;
 let userList = null;
+let startButtonElem = null;
 
 function initSockets() {
     let socket = io();
@@ -35,6 +36,13 @@ function updateUserList() {
         userListHtml += `<li>${this.name}</li>`;
     });
     userListElem.html(userListHtml);
+
+    if (room.started === 'False') {
+        startButtonElem.html(`<button class="btn">Start Game</button>`);
+    } else {
+        // Clear button if game has started
+        startButtonElem.html(``);
+    }
 }
 
 function setRoom(inlineRoom) {
@@ -45,6 +53,7 @@ function setRoom(inlineRoom) {
 $(document).ready(function() {
     // JQuery selectors
     userListElem = $("#userList");
+    startButtonElem = $("#startButton");
 
     room_code = $("#room-data").data().code;
 

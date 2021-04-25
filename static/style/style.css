@@ -69,3 +69,11 @@ ul {
 .column-small {
     flex: 33%;
 }
+
+.btn {
+    background-color: #457b9d;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
