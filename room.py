@@ -43,6 +43,7 @@ class Room:
         Returns:
             None
         """
+        # TODO add handling to stop users from joining an already-started game ('Spectator' mode?)
         if user not in self.users:
             self.users.append(user)
 
