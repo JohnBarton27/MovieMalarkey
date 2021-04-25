@@ -85,6 +85,23 @@ class TestRoom(unittest.TestCase):
         room.add_user(user2)
         self.assertEqual(room.users, [TestRoom.user1])
 
+    @patch('user.User.serialize')
+    def test_serialize(self, m_user_serialize):
+        room = Room(TestRoom.user1)
+        room.code = 'ABCD'
+
+        m_user_serialize.return_value = {'name': 'USER1'}
+
+        correct_serialized = {
+            'code': 'ABCD',
+            'host': {'name': 'USER1'},
+            'users': [{'name': 'USER1'}]
+        }
+
+        self.assertEqual(room.serialize(), correct_serialized)
+
+        m_user_serialize.assert_called()
+
     def test_start(self):
         room = Room(TestRoom.user1)
 
