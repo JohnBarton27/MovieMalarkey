@@ -19,6 +19,7 @@ class Room:
         self.host = creator
         self.users = [creator]
         self.code = Room.generate_code()
+        self.current_judge = None
         self.started = False
 
     def __repr__(self):
@@ -67,6 +68,7 @@ class Room:
         return {
             'code': self.code,
             'host': self.host.serialize(),
+            'judge': self.current_judge.serialize() if self.current_judge else '',
             'started': str(self.started),
             'users': [user.serialize() for user in self.users]
         }
@@ -79,6 +81,9 @@ class Room:
             None
         """
         self.started = True
+
+        # Randomly select first judge
+        self.current_judge = random.choice(self.users)
 
     def stop(self):
         """

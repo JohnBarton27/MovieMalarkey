@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import call, patch
+from unittest.mock import call, patch, MagicMock
 
 from room import Room
 from user import User
@@ -21,7 +21,10 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(room.host, TestRoom.user1)
         self.assertEqual(room.users, [TestRoom.user1])
         self.assertEqual(room.code, 'AB27')
+
+        # Defaults/empty
         self.assertFalse(room.started)
+        self.assertIsNone(room.current_judge)
 
     def test_repr(self):
         room = Room(TestRoom.user1)
@@ -95,6 +98,7 @@ class TestRoom(unittest.TestCase):
         correct_serialized = {
             'code': 'ABCD',
             'host': {'name': 'USER1'},
+            'judge': '',
             'started': 'False',
             'users': [{'name': 'USER1'}]
         }
@@ -103,15 +107,46 @@ class TestRoom(unittest.TestCase):
 
         m_user_serialize.assert_called()
 
-    def test_start(self):
+    @patch('user.User.serialize')
+    def test_serialize_with_judge(self, m_user_serialize):
         room = Room(TestRoom.user1)
+        room.code = 'ABCD'
+
+        m_user_serialize.return_value = {'name': 'USER1'}
+        room.current_judge = TestRoom.user1
+
+        correct_serialized = {
+            'code': 'ABCD',
+            'host': {'name': 'USER1'},
+            'judge': {'name': 'USER1'},
+            'started': 'False',
+            'users': [{'name': 'USER1'}]
+        }
+
+        self.assertEqual(room.serialize(), correct_serialized)
+
+        m_user_serialize.assert_called()
+
+    @patch('room.random.choice')
+    @patch('room.Room.generate_code')
+    def test_start(self, m_generate_code, m_choice):
+        room = Room(TestRoom.user1)
+
+        # We don't actually need to test if generate_code() is working, but since we're
+        # patching random.choice(), it won't work, so we need to patch it as well
+        m_generate_code.assert_called()
 
         # Room should not be started upon __init__
         self.assertFalse(room.started)
 
+        selected_user = MagicMock()
+        m_choice.return_value = selected_user
+
         room.start()
+        m_choice.assert_called_with(room.users)
 
         self.assertTrue(room.started)
+        self.assertEqual(room.current_judge, selected_user)
 
     def test_stop(self):
         room = Room(TestRoom.user1)
