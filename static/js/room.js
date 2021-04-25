@@ -33,7 +33,8 @@ function readCookie(name) {
 function updateUserList() {
     let userListHtml = '';
     $.each(room.users, function() {
-        userListHtml += `<li>${this.name}</li>`;
+        let isJudge = this.name === room.judge.name;
+        userListHtml += `<li>${isJudge ? `<i class="fas fa-gavel"></i>` : ``} ${this.name}</li>`;
     });
     userListElem.html(userListHtml);
 
