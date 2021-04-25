@@ -32,6 +32,10 @@ class TestUser(unittest.TestCase):
         user = User('User123')
         self.assertEqual(hash(user), hash('User123'))
 
+    def test_serialize(self):
+        user = User('User123')
+        self.assertEqual(user.serialize(), {'name': 'User123'})
+
 
 if __name__ == '__main__':
     unittest.main()
