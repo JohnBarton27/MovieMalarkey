@@ -6,6 +6,9 @@ let myUsername = null;
 let userList = null;
 let startButtonElem = null;
 
+let givenTitleElem = null;
+let plotAreaElem = null;
+
 function initSockets() {
     let socket = io();
     socket.on('connect', function() {
@@ -66,6 +69,8 @@ $(document).ready(function() {
     // JQuery selectors
     userListElem = $("#userList");
     startButtonElem = $("#startButton");
+    givenTitleElem = $("#givenTitle");
+    plotAreaElem = $("#plotArea");
 
     room_code = $("#room-data").data().code;
 
