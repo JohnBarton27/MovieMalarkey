@@ -93,3 +93,18 @@ class Room:
             None
         """
         self.started = False
+
+    def select_next_judge(self):
+        if not self.current_judge:
+            # If we somehow don't already have a judge, pick a random user from the room
+            self.current_judge = random.choice(self.users)
+            return
+
+        index = self.users.index(self.current_judge)
+        index += 1
+        if index == len(self.users):
+            # We were at the 'last' user, so loop around & restart
+            self.current_judge = self.users[0]
+            return
+
+        self.current_judge = self.users[index]

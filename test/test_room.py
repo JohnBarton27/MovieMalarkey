@@ -156,6 +156,49 @@ class TestRoom(unittest.TestCase):
 
         self.assertFalse(room.started)
 
+    def test_select_next_judge(self):
+        room = Room(TestRoom.user1)
+        user2 = User('User2')
+        user3 = User('User3')
+        room.users = [TestRoom.user1, user2, user3]
+        room.current_judge = TestRoom.user1
+
+        room.select_next_judge()
+
+        self.assertEqual(room.current_judge, user2)
+
+    def test_select_next_judge_loop_around(self):
+        room = Room(TestRoom.user1)
+        user2 = User('User2')
+        user3 = User('User3')
+        room.users = [TestRoom.user1, user2, user3]
+        room.current_judge = user3
+
+        room.select_next_judge()
+
+        self.assertEqual(room.current_judge, TestRoom.user1)
+
+    @patch('room.random.choice')
+    @patch('room.Room.generate_code')
+    def test_select_next_judge_random(self, m_generate_code, m_choice):
+        room = Room(TestRoom.user1)
+
+        # We don't actually need to test if generate_code() is working, but since we're
+        # patching random.choice(), it won't work, so we need to patch it as well
+        m_generate_code.assert_called()
+
+        user2 = User('User2')
+        user3 = User('User3')
+        room.users = [TestRoom.user1, user2, user3]
+        room.current_judge = None
+
+        m_choice.return_value = user3
+
+        room.select_next_judge()
+
+        m_choice.assert_called_with(room.users)
+        self.assertEqual(room.current_judge, user3)
+
 
 if __name__ == '__main__':
     unittest.main()
