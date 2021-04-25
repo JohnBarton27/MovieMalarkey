@@ -46,6 +46,19 @@ def check_room_code():
     return 'false'
 
 
+@app.route('/startGame')
+def start_game():
+    # TODO add handling to make sure at least 3 people have joined the room
+    room_code = request.args.get('code')
+    for room in rooms:
+        if room.code == room_code:
+            room.start()
+            resp = make_response(room.serialize())
+            return resp
+
+    return 'Room not found'
+
+
 @app.route('/play')
 def enter_room():
     user = User(request.cookies.get('user_name'))

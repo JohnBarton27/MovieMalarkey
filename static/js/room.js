@@ -38,11 +38,20 @@ function updateUserList() {
     userListElem.html(userListHtml);
 
     if (room.started === 'False') {
-        startButtonElem.html(`<button class="btn">Start Game</button>`);
+        startButtonElem.html(`<button class="btn" onclick="startGame()">Start Game</button>`);
     } else {
         // Clear button if game has started
         startButtonElem.html(``);
     }
+}
+
+function startGame() {
+    $.get('/startGame?code=' + room_code, function(responseText) {
+        console.log(responseText);
+        responseRoom = responseText;
+        setRoom(responseRoom);
+    });
+
 }
 
 function setRoom(inlineRoom) {
