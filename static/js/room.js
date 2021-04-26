@@ -46,8 +46,20 @@ function readCookie(name) {
 function updateUserList() {
     let userListHtml = '';
     $.each(room.users, function() {
-        let isJudge = this.name === room.judge.name;
-        userListHtml += `<li>${isJudge ? `<i class="fas fa-gavel"></i>` : ``} ${this.name}</li>`;
+        let isJudge = ``;
+        let className = ``;
+
+        if (this.name === room.judge.name) {
+            // If this user is the judge
+            isJudge = `<i class="fas fa-gavel"></i>`;
+        }
+
+        if (this.name === readCookie('user_name')) {
+            // If this is the current user
+            className=`current-user`;
+        }
+
+        userListHtml += `<li class="${className}">${isJudge} ${this.name}</li>`;
     });
     userListElem.html(userListHtml);
 

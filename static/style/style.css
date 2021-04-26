@@ -77,3 +77,13 @@ ul {
     border-radius: 10px;
     font-weight: bold;
 }
+
+.current-user {
+    background-color: #457b9d;
+    width: 100px;
+    margin: auto;
+    color: white;
+    font-weight: bold;
+    padding: 3px;
+    border-radius: 3px;
+}
