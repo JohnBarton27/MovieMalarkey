@@ -21,15 +21,13 @@ function initSockets() {
         } else if (data['event'] == "start-game") {
             setRoom(data['room']);
         } else if (data['event'] == "movie") {
+            // Full Movie (for judge)
             displayTitle(data['title']);
             displayRealPlot(data['plot']);
-            console.log("GOT FULL MOVIE");
-            console.log(data);
         } else if (data['event'] == "movie-title") {
+            // Title only (for players)
             displayTitle(data['title']);
             displayPlotInput();
-            console.log("GOT TITLE ONLY");
-            console.log(data);
         }
     });
 }

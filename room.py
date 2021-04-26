@@ -54,6 +54,7 @@ class Room:
             for existing_user in self.users:
                 if existing_user == user:
                     existing_user.socket_client = user.socket_client
+                    return
 
     @staticmethod
     def generate_code():

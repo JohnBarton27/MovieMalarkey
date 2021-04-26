@@ -1,5 +1,5 @@
 from flask import Flask, make_response, render_template, request
-from flask_socketio import SocketIO, join_room, leave_room, send, emit, rooms
+from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
 from movie import Movie
 from room import Room
