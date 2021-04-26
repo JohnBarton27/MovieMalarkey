@@ -90,6 +90,35 @@ class TestRoom(unittest.TestCase):
         room.add_user(user2)
         self.assertEqual(room.users, [TestRoom.user1])
 
+    @patch('room.Room.select_next_judge')
+    def test_end_round(self, m_next_judge):
+        room = Room(TestRoom.user1)
+        user2 = User('User2')
+        user3 = User('User3')
+
+        room.add_user(user2)
+        room.add_user(user3)
+
+        TestRoom.user1.current_answer = 'User1\'s answer'
+        user2.current_answer = 'An answer from User2'
+        user3.current_answer = None
+
+        movie = MagicMock()
+
+        room.current_movie = movie
+        room.current_judge = user2
+
+        m_next_judge.return_value = None
+
+        room.end_round()
+
+        self.assertIsNone(TestRoom.user1.current_answer)
+        self.assertIsNone(user2.current_answer)
+        self.assertIsNone(user3.current_answer)
+        self.assertIsNone(room.current_movie)
+
+        m_next_judge.assert_called()
+
     @patch('user.User.serialize')
     def test_serialize(self, m_user_serialize):
         room = Room(TestRoom.user1)

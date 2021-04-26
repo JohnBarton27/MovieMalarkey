@@ -57,6 +57,21 @@ class Room:
                     existing_user.socket_client = user.socket_client
                     return
 
+    def end_round(self):
+        """
+        Cleanup method for when a round ends (clears all answers, etc.)
+
+        Returns:
+            None
+        """
+        # Wipe all answers
+        for user in self.users:
+            user.current_answer = None
+
+        self.current_movie = None
+
+        self.select_next_judge()
+
     @staticmethod
     def generate_code():
         """
