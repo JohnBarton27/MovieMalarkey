@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import call, patch, MagicMock
 
+from movie import Movie
 from room import Room
 from user import User
 
@@ -25,6 +26,7 @@ class TestRoom(unittest.TestCase):
         # Defaults/empty
         self.assertFalse(room.started)
         self.assertIsNone(room.current_judge)
+        self.assertIsNone(room.current_movie)
 
     def test_repr(self):
         room = Room(TestRoom.user1)
@@ -99,6 +101,7 @@ class TestRoom(unittest.TestCase):
             'code': 'ABCD',
             'host': {'name': 'USER1'},
             'judge': '',
+            'movie': '',
             'started': 'False',
             'users': [{'name': 'USER1'}]
         }
@@ -119,6 +122,7 @@ class TestRoom(unittest.TestCase):
             'code': 'ABCD',
             'host': {'name': 'USER1'},
             'judge': {'name': 'USER1'},
+            'movie': '',
             'started': 'False',
             'users': [{'name': 'USER1'}]
         }
@@ -126,6 +130,31 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(room.serialize(), correct_serialized)
 
         m_user_serialize.assert_called()
+
+    @patch('user.User.serialize')
+    @patch('movie.Movie.serialize')
+    def test_serialize_with_movie(self, m_movie_serialize, m_user_serialize):
+        room = Room(TestRoom.user1)
+        room.code = 'ABCD'
+
+        m_movie_serialize.return_value = {'title': 'Everyday Gator'}
+        room.current_movie = Movie('Everyday Gator', '2014')
+
+        m_user_serialize.return_value = {'name': 'USER1'}
+
+        correct_serialized = {
+            'code': 'ABCD',
+            'host': {'name': 'USER1'},
+            'judge': '',
+            'movie': {'title': 'Everyday Gator'},
+            'started': 'False',
+            'users': [{'name': 'USER1'}]
+        }
+
+        self.assertEqual(room.serialize(), correct_serialized)
+
+        m_user_serialize.assert_called()
+        m_movie_serialize.assert_called()
 
     @patch('room.random.choice')
     @patch('room.Room.generate_code')

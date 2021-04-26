@@ -26,6 +26,12 @@ class Movie:
     def populate(self):
         self._imdbpy_movie = Movie.ia.get_movie(self.id)
 
+    def serialize(self):
+        return {
+            'title': self.title,
+            'plot': self.plot
+        }
+
     @property
     def plot(self):
         raw_plot = self._imdbpy_movie["plot"][0]

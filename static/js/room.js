@@ -54,7 +54,7 @@ function updateUserList() {
             isJudge = `<i class="fas fa-gavel"></i>`;
         }
 
-        if (this.name === readCookie('user_name')) {
+        if (this.name === myUsername) {
             // If this is the current user
             className=`current-user`;
         }
@@ -64,7 +64,7 @@ function updateUserList() {
     userListElem.html(userListHtml);
 
     if (room.started === 'False') {
-        if (readCookie('user_name') === room.host.name) {
+        if (myUsername === room.host.name) {
             startButtonElem.html(`<button class="btn" onclick="startGame()">Start Game</button>`);
         } else {
             startButtonElem.html(`<span style="color:#e63946; padding: 5px; border-radius: 3px; border: 1px solid #e63946;">Waiting for host...</span>`);
@@ -98,6 +98,15 @@ function displayPlotInput() {
 function setRoom(inlineRoom) {
     room = inlineRoom;
     updateUserList();
+
+    if (room.movie) {
+        displayTitle(room.movie.title);
+        if (myUsername === room.judge.name) {
+            displayRealPlot(room.movie.plot);
+        } else {
+            displayPlotInput();
+        }
+    }
 }
 
 $(document).ready(function() {

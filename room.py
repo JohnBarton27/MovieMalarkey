@@ -21,6 +21,7 @@ class Room:
         self.code = Room.generate_code()
         self.current_judge = None
         self.started = False
+        self.current_movie = None
 
     def __repr__(self):
         return self.code
@@ -77,6 +78,7 @@ class Room:
             'code': self.code,
             'host': self.host.serialize(),
             'judge': self.current_judge.serialize() if self.current_judge else '',
+            'movie': self.current_movie.serialize() if self.current_movie else '',
             'started': str(self.started),
             'users': [user.serialize() for user in self.users]
         }

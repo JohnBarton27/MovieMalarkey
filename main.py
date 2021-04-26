@@ -73,6 +73,7 @@ def start_round():
         if room.code == room_code:
             # Found the room
             movie = Movie.get_random()
+            room.current_movie = movie
 
             # Send title & plot to host
             socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_judge.socket_client)
@@ -116,6 +117,7 @@ def connect(data):
             room = open_room
             join_room(room.code)
 
+            # TODO remove 'plot' from movies if not sending to judge
             send({'event': 'new-user', 'username': user.name, 'room': room.serialize()}, json=True, to=room.code)
 
             print(f'{user.name} joined {room.code} ({user.socket_client})')
