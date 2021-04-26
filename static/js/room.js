@@ -52,7 +52,11 @@ function updateUserList() {
     userListElem.html(userListHtml);
 
     if (room.started === 'False') {
-        startButtonElem.html(`<button class="btn" onclick="startGame()">Start Game</button>`);
+        if (readCookie('user_name') === room.host.name) {
+            startButtonElem.html(`<button class="btn" onclick="startGame()">Start Game</button>`);
+        } else {
+            startButtonElem.html(`<span style="color:#e63946; padding: 5px; border-radius: 3px; border: 1px solid #e63946;">Waiting for host...</span>`);
+        }
     } else {
         // Clear button if game has started
         startButtonElem.html(``);
