@@ -20,6 +20,16 @@ function initSockets() {
             setRoom(data['room']);
         } else if (data['event'] == "start-game") {
             setRoom(data['room']);
+        } else if (data['event'] == "movie") {
+            displayTitle(data['title']);
+            displayRealPlot(data['plot']);
+            console.log("GOT FULL MOVIE");
+            console.log(data);
+        } else if (data['event'] == "movie-title") {
+            displayTitle(data['title']);
+            displayPlotInput();
+            console.log("GOT TITLE ONLY");
+            console.log(data);
         }
     });
 }
@@ -53,11 +63,22 @@ function updateUserList() {
 
 function startGame() {
     $.get('/startGame?code=' + room_code, function(responseText) {
-        console.log(responseText);
         responseRoom = responseText;
         setRoom(responseRoom);
     });
 
+}
+
+function displayTitle(title) {
+    givenTitleElem.html(`<h3>${title}</h3>`);
+}
+
+function displayRealPlot(plot) {
+    plotAreaElem.html(`<p>${plot}</p>`);
+}
+
+function displayPlotInput() {
+    plotAreaElem.html(`<textarea rows="4" cols="50"></textarea>`)
 }
 
 function setRoom(inlineRoom) {

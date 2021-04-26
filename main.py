@@ -1,5 +1,5 @@
 from flask import Flask, make_response, render_template, request
-from flask_socketio import SocketIO, join_room, leave_room, send, emit
+from flask_socketio import SocketIO, join_room, leave_room, send, emit, rooms
 
 from movie import Movie
 from room import Room
@@ -8,6 +8,7 @@ from user import User
 app = Flask(__name__, template_folder='templates')
 socketio = SocketIO(app)
 rooms = []
+users = []
 
 
 @app.route('/')
@@ -57,19 +58,43 @@ def start_game():
 
             socketio.send({'event': 'start-game', 'room': room.serialize()}, json=True, to=room.code)
 
+            # Start the first round
+            start_round()
+
             return resp
+
+    return 'Room not found'
+
+
+@app.route('/startRound')
+def start_round():
+    room_code = request.args.get('code')
+    for room in rooms:
+        if room.code == room_code:
+            # Found the room
+            movie = Movie.get_random()
+
+            # Send title & plot to host
+            socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_judge.socket_client)
+
+            # Send title to rest of users
+            for guesser in room.users:
+                if guesser == room.current_judge:
+                    continue
+                socketio.send({'event': 'movie-title', 'title': movie.title}, json=True,
+                              to=guesser.socket_client)
+
+            return 'Started round!'
 
     return 'Room not found'
 
 
 @app.route('/play')
 def enter_room():
-    user = User(request.cookies.get('user_name'))
     room_code = request.cookies.get('room')
 
     for room in rooms:
         if room.code == room_code:
-            room.add_user(user)
             resp = make_response(render_template('room.html', room=room.serialize()))
             return resp
 
@@ -79,15 +104,21 @@ def enter_room():
 @socketio.on('join_room')
 def connect(data):
     user = User(request.cookies.get('user_name'))
+    user.socket_client = request.sid
     current_code = data['room']
 
     for open_room in rooms:
         if open_room.code == current_code:
+            open_room.add_user(user)
+
+            users.append(user)
+
             room = open_room
             join_room(room.code)
+
             send({'event': 'new-user', 'username': user.name, 'room': room.serialize()}, json=True, to=room.code)
 
-            print(f'{user.name} joined {room.code}')
+            print(f'{user.name} joined {room.code} ({user.socket_client})')
             break
 
 

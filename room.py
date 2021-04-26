@@ -47,6 +47,13 @@ class Room:
         # TODO add handling to stop users from joining an already-started game ('Spectator' mode?)
         if user not in self.users:
             self.users.append(user)
+            return
+
+        # Ensure user is fully populated
+        if user.socket_client:
+            for existing_user in self.users:
+                if existing_user == user:
+                    existing_user.socket_client = user.socket_client
 
     @staticmethod
     def generate_code():

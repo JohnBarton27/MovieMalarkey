@@ -13,12 +13,13 @@ class User:
         """
         self.name = name
         self.current_score = 0
+        self.socket_client = None
 
     def __repr__(self):
-        return self.name
+        return str(self)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} ({self.socket_client})'
 
     def __eq__(self, other):
         return self.name == other.name
