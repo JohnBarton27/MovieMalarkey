@@ -1,5 +1,6 @@
 from flask import Flask, make_response, render_template, request
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
+from urllib.parse import unquote
 
 from movie import Movie
 from room import Room
@@ -9,6 +10,12 @@ app = Flask(__name__, template_folder='templates')
 socketio = SocketIO(app)
 rooms = []
 users = []
+
+
+def _get_user(username):
+    for user in users:
+        if user.name == username:
+            return user
 
 
 @app.route('/')
@@ -33,6 +40,15 @@ def new_room():
     resp = make_response(room.code)
     resp.set_cookie('room', room.code)
     return resp
+
+
+@app.route('/submitGuess', methods=['POST'])
+def submit_guess():
+    data = unquote(str(request.data))
+    guess = data.split('=')[-1]
+    user = _get_user(request.cookies.get('user_name'))
+    user.current_answer = guess
+    return 'Success'
 
 
 @app.route('/checkRoomCode')

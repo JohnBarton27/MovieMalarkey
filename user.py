@@ -14,6 +14,7 @@ class User:
         self.name = name
         self.current_score = 0
         self.socket_client = None
+        self.current_answer = None
 
     def __repr__(self):
         return str(self)
@@ -27,5 +28,12 @@ class User:
     def __hash__(self):
         return hash(self.name)
 
+    @property
+    def has_answered(self):
+        return self.current_answer is not None
+
     def serialize(self):
-        return {'name': self.name}
+        return {
+            'hasAnswered': str(self.has_answered),
+            'name': self.name
+        }

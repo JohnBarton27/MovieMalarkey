@@ -92,7 +92,24 @@ function displayRealPlot(plot) {
 }
 
 function displayPlotInput() {
-    plotAreaElem.html(`<textarea rows="4" cols="50"></textarea>`)
+    plotAreaElem.html(`<textarea id="plotGuess" rows="4" cols="50" style='display:block; margin:auto;'></textarea>
+    <button class='btn' style='margin-top: 15px;' onclick="submitGuess()">Submit</btn>`);
+}
+
+function submitGuess() {
+    let guess = $("#plotGuess").val();
+    displayRealPlot(guess);
+
+    $.ajax({
+        url: '/submitGuess',
+        type: 'POST',
+        data: {'guess': guess},
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function() {
+            console.log("POSTed guess!");
+        }
+    });
 }
 
 function setRoom(inlineRoom) {
