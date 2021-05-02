@@ -3,6 +3,7 @@ let userListElem = null;
 let room = null;
 let room_code = null;
 let myUsername = null;
+let me = null;
 let userList = null;
 let startButtonElem = null;
 
@@ -127,7 +128,14 @@ function setRoom(inlineRoom) {
     room = inlineRoom;
     updateUserList();
 
-    if (room.movie) {
+    $.each(room.users, function() {
+        if (this.name === myUsername) {
+            me = this;
+            return;
+        }
+    });
+
+    if (room.movie && givenTitleElem.is(':empty')) {
         displayTitle(room.movie.title);
         if (myUsername === room.judge.name) {
             displayRealPlot(room.movie.plot);
