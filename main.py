@@ -18,6 +18,18 @@ def _get_user(username):
             return user
 
 
+def _get_user_from_room(username, room):
+    for user in room.users:
+        if user.name == username:
+            return user
+
+
+def _get_room(room_code):
+    for room in rooms:
+        if room.code == room_code:
+            return room
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -44,42 +56,56 @@ def new_room():
 
 @app.route('/submitGuess', methods=['POST'])
 def submit_guess():
+    room = _get_room(request.cookies.get('room'))
+
+    # Handle non-existent room
+    if not room:
+        return 'false'
+
     data = unquote(str(request.data))
     guess = data.split('=')[-1]
-    user = _get_user(request.cookies.get('user_name'))
+    user = _get_user_from_room(request.cookies.get('user_name'), room)
     user.current_answer = guess
+
+    # Acknowledge submission to other users
+    for guesser in room.users:
+        socketio.send({'event': 'user-answered', 'room': room.serialize()}, json=True,
+                      to=guesser.socket_client)
+
     return 'Success'
 
 
 @app.route('/checkRoomCode')
 def check_room_code():
-    room_code = request.args.get('code')
-    for room in rooms:
-        if room.code == room_code:
-            resp = make_response('true')
-            resp.set_cookie('room', room.code)
-            return resp
+    room = _get_room(request.args.get('code'))
 
-    return 'false'
+    # Handle non-existent room
+    if not room:
+        return 'false'
+
+    resp = make_response('true')
+    resp.set_cookie('room', room.code)
+    return resp
 
 
 @app.route('/startGame')
 def start_game():
     # TODO add handling to make sure at least 3 people have joined the room
-    room_code = request.args.get('code')
-    for room in rooms:
-        if room.code == room_code:
-            room.start()
-            resp = make_response(room.serialize())
+    room = _get_room(request.args.get('code'))
 
-            socketio.send({'event': 'start-game', 'room': room.serialize()}, json=True, to=room.code)
+    # Handle non-existent room
+    if not room:
+        return 'Room not found'
 
-            # Start the first round
-            start_round()
+    room.start()
+    resp = make_response(room.serialize())
 
-            return resp
+    socketio.send({'event': 'start-game', 'room': room.serialize()}, json=True, to=room.code)
 
-    return 'Room not found'
+    # Start the first round
+    start_round()
+
+    return resp
 
 
 @app.route('/startRound')

@@ -28,6 +28,8 @@ function initSockets() {
             // Title only (for players)
             displayTitle(data['title']);
             displayPlotInput();
+        } else if (data['event'] == "user-answered") {
+            setRoom(data['room']);
         }
     });
 }
@@ -45,9 +47,12 @@ function readCookie(name) {
 
 function updateUserList() {
     let userListHtml = '';
+
+    // User List
     $.each(room.users, function() {
         let isJudge = ``;
         let className = ``;
+        let hasSubmitted = ``;
 
         if (this.name === room.judge.name) {
             // If this user is the judge
@@ -56,13 +61,19 @@ function updateUserList() {
 
         if (this.name === myUsername) {
             // If this is the current user
-            className=`current-user`;
+            className = `current-user`;
         }
 
-        userListHtml += `<li class="${className}">${isJudge} ${this.name}</li>`;
+        if (this.hasAnswered === "True") {
+            // If user has answered for the current round
+            hasSubmitted = `<i class="fas fa-check"></i>`;
+        }
+
+        userListHtml += `<li class="${className}">${isJudge} ${this.name} ${hasSubmitted}</li>`;
     });
     userListElem.html(userListHtml);
 
+    // "Start Game" Button
     if (room.started === 'False') {
         if (myUsername === room.host.name) {
             startButtonElem.html(`<button class="btn" onclick="startGame()">Start Game</button>`);
