@@ -52,6 +52,21 @@ class TestUser(unittest.TestCase):
                          {'hasAnswered': 'False',
                           'name': 'User123'})
 
+    def test_serialize_full_no_answer(self):
+        user = User('User123')
+        self.assertEqual(user.serialize(full=True),
+                         {'currentAnswer': None,
+                          'hasAnswered': 'False',
+                          'name': 'User123'})
+
+    def test_serialize_full_with_answer(self):
+        user = User('User123')
+        user.current_answer = 'A really good guess'
+        self.assertEqual(user.serialize(full=True),
+                         {'currentAnswer': 'A really good guess',
+                          'hasAnswered': 'True',
+                          'name': 'User123'})
+
 
 if __name__ == '__main__':
     unittest.main()

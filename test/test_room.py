@@ -137,7 +137,27 @@ class TestRoom(unittest.TestCase):
 
         self.assertEqual(room.serialize(), correct_serialized)
 
-        m_user_serialize.assert_called()
+        m_user_serialize.assert_called_with(full=False)
+
+    @patch('user.User.serialize')
+    def test_serialize_full(self, m_user_serialize):
+        room = Room(TestRoom.user1)
+        room.code = 'ABCD'
+
+        m_user_serialize.return_value = {'name': 'USER1'}
+
+        correct_serialized = {
+            'code': 'ABCD',
+            'host': {'name': 'USER1'},
+            'judge': '',
+            'movie': '',
+            'started': 'False',
+            'users': [{'name': 'USER1'}]
+        }
+
+        self.assertEqual(room.serialize(full=True), correct_serialized)
+
+        m_user_serialize.assert_called_with(full=True)
 
     @patch('user.User.serialize')
     def test_serialize_with_judge(self, m_user_serialize):

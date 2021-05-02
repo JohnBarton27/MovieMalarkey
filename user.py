@@ -32,8 +32,15 @@ class User:
     def has_answered(self):
         return self.current_answer is not None
 
-    def serialize(self):
-        return {
+    def serialize(self, full=False):
+
+        # This is what is seen by "default" (no cheating on guesses, etc.)
+        serialized = {
             'hasAnswered': str(self.has_answered),
             'name': self.name
         }
+
+        if full:
+            serialized['currentAnswer'] = self.current_answer
+
+        return serialized

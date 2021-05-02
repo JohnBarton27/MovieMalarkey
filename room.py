@@ -88,14 +88,14 @@ class Room:
         # TODO ensure code is not already in use
         return code
 
-    def serialize(self):
+    def serialize(self, full=False):
         return {
             'code': self.code,
             'host': self.host.serialize(),
-            'judge': self.current_judge.serialize() if self.current_judge else '',
+            'judge': self.current_judge.serialize(full=full) if self.current_judge else '',
             'movie': self.current_movie.serialize() if self.current_movie else '',
             'started': str(self.started),
-            'users': [user.serialize() for user in self.users]
+            'users': [user.serialize(full=full) for user in self.users]
         }
 
     def start(self):
