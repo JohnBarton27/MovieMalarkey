@@ -72,6 +72,10 @@ def submit_guess():
         socketio.send({'event': 'user-answered', 'room': room.serialize()}, json=True,
                       to=guesser.socket_client)
 
+    # Send the host the guess
+    socketio.send({'event': 'user-guess', 'room': room.serialize(full=True)}, json=True,
+                  to=room.current_judge.socket_client)
+
     return 'Success'
 
 

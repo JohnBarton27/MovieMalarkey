@@ -31,6 +31,8 @@ function initSockets() {
             displayPlotInput();
         } else if (data['event'] == "user-answered") {
             setRoom(data['room']);
+        } else if (data['event'] == 'user-guess') {
+            console.log(data['room']);
         }
     });
 }
