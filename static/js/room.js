@@ -6,6 +6,7 @@ let myUsername = null;
 let me = null;
 let userList = null;
 let startButtonElem = null;
+let currentPlot = null;
 
 let givenTitleElem = null;
 let plotAreaElem = null;
@@ -24,7 +25,8 @@ function initSockets() {
         } else if (data['event'] == "movie") {
             // Full Movie (for judge)
             displayTitle(data['title']);
-            displayRealPlot(data['plot']);
+            currentPlot = data['plot'];
+            checkForStart(data['plot']);
         } else if (data['event'] == "movie-title") {
             // Title only (for players)
             displayTitle(data['title']);
@@ -102,6 +104,25 @@ function startGame() {
 
 function displayTitle(title) {
     givenTitleElem.html(`<h3>${title}</h3>`);
+}
+
+function checkForStart(plot) {
+    let plotCheckHtml = `
+        <p>${plot}</p>
+        <hr>
+        <p>Begin with this movie/plot?</p>
+        <button onclick="begin();">Begin</button><button onclick="skipMovie();">Different Movie</button>
+    `
+    plotAreaElem.html(plotCheckHtml);
+}
+
+function begin() {
+    $.post('/openGuesses');
+    displayRealPlot(currentPlot);
+}
+
+function skipMovie() {
+    $.post('/startRound?code=' + room_code);
 }
 
 function displayRealPlot(plot) {

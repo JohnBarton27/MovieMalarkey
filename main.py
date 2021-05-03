@@ -114,7 +114,7 @@ def start_game():
     return resp
 
 
-@app.route('/startRound')
+@app.route('/startRound', methods=['POST'])
 def start_round():
     room_code = request.args.get('code')
     for room in rooms:
@@ -126,16 +126,28 @@ def start_round():
             # Send title & plot to host
             socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_judge.socket_client)
 
-            # Send title to rest of users
-            for guesser in room.users:
-                if guesser == room.current_judge:
-                    continue
-                socketio.send({'event': 'movie-title', 'title': movie.title}, json=True,
-                              to=guesser.socket_client)
-
             return 'Started round!'
 
     return 'Room not found'
+
+
+@app.route('/openGuesses', methods=['POST'])
+def open_guesses():
+    """
+    "Opens" the guessing for other users - this means the judge has found a suitable title/plot and is ready for users
+    to start guessing.
+
+    Returns:
+        Response
+    """
+    room = _get_room(request.cookies.get('room'))
+
+    # Send title to rest of users
+    for guesser in room.guessers:
+        socketio.send({'event': 'movie-title', 'title': room.current_movie.title}, json=True,
+                      to=guesser.socket_client)
+
+    return 'Opened guessing!'
 
 
 @app.route('/play')
