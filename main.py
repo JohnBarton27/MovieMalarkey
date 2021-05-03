@@ -63,7 +63,9 @@ def submit_guess():
         return 'false'
 
     data = unquote(str(request.data))
-    guess = data.split('=')[-1]
+
+    # Grab everything after '=' and strip off trailing single quote (')
+    guess = data.split('=')[-1][:-1]
     user = _get_user_from_room(request.cookies.get('user_name'), room)
     user.current_answer = guess
 
