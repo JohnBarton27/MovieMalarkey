@@ -32,7 +32,10 @@ function initSockets() {
         } else if (data['event'] == "user-answered") {
             setRoom(data['room']);
         } else if (data['event'] == 'user-guess') {
-            console.log(data['room']);
+            setRoom(data['room']);
+
+            // Update plot guesses table
+            displayRealPlot(room.movie.plot);
         }
     });
 }
@@ -102,7 +105,27 @@ function displayTitle(title) {
 }
 
 function displayRealPlot(plot) {
-    plotAreaElem.html(`<p>${plot}</p>`);
+    // Build table
+    let guessesTable = `<table><tr><th>User</th><th>Guess</th></tr>`;
+
+    $.each(room.users, function() {
+        guessesTable += `<tr><td>${this.name}</td>`;
+
+        if (this.name === room.judge.name) {
+            // The "judge" uses the real plot for their "answer"
+            guessesTable += `<td>${plot}</td></tr>`
+        } else {
+            // All other users have actual answers/guesses
+            guessesTable += `<td>${this.currentAnswer}</td></tr>`;
+        }
+    });
+
+    guessesTable += `</table>`;
+    plotAreaElem.html(guessesTable);
+}
+
+function lockInGuess(guess) {
+    plotAreaElem.html(`<p>${guess}</p>`);
 }
 
 function displayPlotInput() {
@@ -112,7 +135,7 @@ function displayPlotInput() {
 
 function submitGuess() {
     let guess = $("#plotGuess").val();
-    displayRealPlot(guess);
+    lockInGuess(guess);
 
     $.ajax({
         url: '/submitGuess',

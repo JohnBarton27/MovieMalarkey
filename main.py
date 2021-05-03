@@ -166,7 +166,19 @@ def connect(data):
             join_room(room.code)
 
             # TODO remove 'plot' from movies if not sending to judge
-            send({'event': 'new-user', 'username': user.name, 'room': room.serialize()}, json=True, to=room.code)
+            if room.current_judge and user == room.current_judge:
+                print(f'This user ({user.name}) is the current judge!')
+                # Send full (including current answers) to judge - this handles the judge refreshing their page and
+                # "re-joining" the game
+                send({'event': 'new-user', 'username': user.name, 'room': room.serialize(full=True)}, json=True, to=room.current_judge.socket_client)
+
+                # Send the judge joining event to all other users (but not the judge, or this would wipe the answers
+                # the judge has)
+                for guesser in room.guessers:
+                    send({'event': 'new-user', 'username': user.name, 'room': room.serialize()}, json=True,
+                         to=guesser.socket_client)
+            else:
+                send({'event': 'new-user', 'username': user.name, 'room': room.serialize()}, json=True, to=room.code)
 
             print(f'{user.name} joined {room.code} ({user.socket_client})')
             break
