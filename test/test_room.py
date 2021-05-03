@@ -9,9 +9,13 @@ from user import User
 class TestRoom(unittest.TestCase):
 
     user1 = None
+    user2 = None
+    user3 = None
 
     def setUp(self) -> None:
         TestRoom.user1 = User('User123')
+        TestRoom.user2 = User('User234')
+        TestRoom.user3 = User('User345')
 
     @patch('room.Room.generate_code')
     def test_init(self, m_gen_code):
@@ -64,17 +68,25 @@ class TestRoom(unittest.TestCase):
 
         self.assertEqual(hash(room), hash('1234'))
 
-    @patch('room.random.choice')
-    def test_generate_code(self, m_choice):
-        m_choice.side_effect = ['1', 'A', '2', 'B']
-        code = Room.generate_code()
+    def test_guessers_with_judge(self):
+        room = Room(TestRoom.user1)
+        room.add_user(TestRoom.user2)
+        room.add_user(TestRoom.user3)
 
-        possible_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        m_choice.assert_has_calls([call(possible_chars),
-                                   call(possible_chars),
-                                   call(possible_chars),
-                                   call(possible_chars)])
-        self.assertEqual(code, '1A2B')
+        room.current_judge = TestRoom.user2
+
+        guessers = room.guessers
+
+        self.assertEqual(guessers, [TestRoom.user1, TestRoom.user3])
+
+    def test_guessers_no_judge(self):
+        room = Room(TestRoom.user1)
+        room.add_user(TestRoom.user2)
+        room.add_user(TestRoom.user3)
+
+        guessers = room.guessers
+
+        self.assertEqual(guessers, [TestRoom.user1, TestRoom.user2, TestRoom.user3])
 
     def test_add_user_new_user(self):
         room = Room(TestRoom.user1)
@@ -118,6 +130,18 @@ class TestRoom(unittest.TestCase):
         self.assertIsNone(room.current_movie)
 
         m_next_judge.assert_called()
+
+    @patch('room.random.choice')
+    def test_generate_code(self, m_choice):
+        m_choice.side_effect = ['1', 'A', '2', 'B']
+        code = Room.generate_code()
+
+        possible_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        m_choice.assert_has_calls([call(possible_chars),
+                                   call(possible_chars),
+                                   call(possible_chars),
+                                   call(possible_chars)])
+        self.assertEqual(code, '1A2B')
 
     @patch('user.User.serialize')
     def test_serialize(self, m_user_serialize):

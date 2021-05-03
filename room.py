@@ -35,6 +35,27 @@ class Room:
     def __hash__(self):
         return hash(self.code)
 
+    @property
+    def guessers(self):
+        """
+        Gets all guessers (everyone but the current judge). Can be useful when sending two different socket events -
+        one to the judge, and one to the guessers (less information, etc.)
+
+        Returns:
+            list: List of User objects
+        """
+        guessers = []
+
+        if not self.current_judge:
+            # If there is no judge, treat everyone as a guesser
+            return self.users
+
+        for user in self.users:
+            if user != self.current_judge:
+                guessers.append(user)
+
+        return guessers
+
     def add_user(self, user: User):
         """
         Add the given user to this Room (handles ensuring no duplicate users)
