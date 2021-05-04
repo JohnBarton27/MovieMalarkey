@@ -157,7 +157,7 @@ function displayHostGuessesTable(plot, revealButtons = false) {
                     <td>${btnHtml}</td></tr>`;
             } else {
                 guessesTable += `<td style="color: gray;">Waiting for answer...</td>
-                    <td${btnHtml}</td></tr>`;
+                    <td>${btnHtml}</td></tr>`;
             }
         }
     });
