@@ -126,6 +126,11 @@ def start_round():
             # Send title & plot to host
             socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_judge.socket_client)
 
+            # Send notification to guessers that the judge is selecting a movie title
+            for guesser in room.guessers:
+                socketio.send({'event': 'judge-selecting'}, json=True,
+                              to=guesser.socket_client)
+
             return 'Started round!'
 
     return 'Room not found'

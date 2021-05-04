@@ -33,6 +33,8 @@ function initSockets() {
             displayPlotInput();
         } else if (data['event'] == "user-answered") {
             setRoom(data['room']);
+        } else if (data['event'] == "judge-selecting") {
+            displayWaitingForJudge();
         } else if (data['event'] == 'user-guess') {
             setRoom(data['room']);
 
@@ -158,6 +160,11 @@ function displayPlotInput() {
     <button class='btn' style='margin-top: 15px;' onclick="submitGuess()">Submit</btn>`);
 }
 
+function displayWaitingForJudge() {
+    plotAreaElem.html(`<p>Waiting for judge to select a movie title/plot...</p>`);
+
+}
+
 function submitGuess() {
     let guess = $("#plotGuess").val();
     lockInGuess(guess);
@@ -189,8 +196,6 @@ function setRoom(inlineRoom) {
         displayTitle(room.movie.title);
         if (myUsername === room.judge.name) {
             displayRealPlot(room.movie.plot);
-        } else {
-            displayPlotInput();
         }
     }
 }
