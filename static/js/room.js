@@ -137,7 +137,11 @@ function displayRealPlot(plot) {
             guessesTable += `<td>${plot}</td></tr>`
         } else {
             // All other users have actual answers/guesses
-            guessesTable += `<td>${this.currentAnswer}</td></tr>`;
+            if (this.currentAnswer) {
+                guessesTable += `<td>${this.currentAnswer}</td></tr>`;
+            } else {
+                guessesTable += `<td style="color: gray;">Waiting for answer...</td>`
+            }
         }
     });
 
