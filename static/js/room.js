@@ -43,6 +43,8 @@ function initSockets() {
         } else if (data['event'] == 'all-guesses-submitted') {
             // All guesses have been submitted - we are almost ready to move to the "reading" phase
             prepareForReading();
+        } else if (data['event'] == 'guess-reveal') {
+            revealGuessToAll(data['plot']);
         }
     });
 }
@@ -188,6 +190,10 @@ function prepareForReading() {
         // Give guessers a message
         plotAreaElem.html(`<p>The judge is reading all responses - soon, you will vote on which you think is the real plot!</p>`);
     }
+}
+
+function revealGuessToAll(guess) {
+    console.log(guess);
 }
 
 function submitGuess() {
