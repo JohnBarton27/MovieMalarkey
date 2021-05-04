@@ -81,9 +81,20 @@ def submit_guess():
     # All users have submitted
     if room.all_guesses_submitted:
         socketio.send({'event': 'all-guesses-submitted', 'room': room.serialize()}, json=True,
-                      to=room.code);
+                      to=room.code)
 
     return 'Success'
+
+
+@app.route('/revealGuess', methods=['POST'])
+def reveal_guess():
+    room = _get_room(request.cookies.get('room'))
+    user = _get_user_from_room(request.args.get('username'), room)
+
+    # TODO Send socket event to all users
+    answer_to_reveal = room.current_movie.plot if user == room.current_judge else user.current_answer
+    print(f'Revealing "{answer_to_reveal}"...')
+    return "Success"
 
 
 @app.route('/checkRoomCode')

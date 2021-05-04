@@ -141,21 +141,30 @@ function displayGuessesTable(plot, revealButtons = false) {
     $.each(room.users, function() {
         guessesTable += `<tr><td>${this.name}</td>`;
 
+        let onRevealClick = `revealGuess('${this.name}');`;
+
         if (this.name === room.judge.name) {
             // The "judge" uses the real plot for their "answer"
-            guessesTable += `<td>${plot}</td><td><button ${revealButton}>Reveal</button></td></tr>`
+            guessesTable += `<td>${plot}</td>
+                <td><button ${revealButton} onclick="${onRevealClick}">Reveal</button></td></tr>`
         } else {
             // All other users have actual answers/guesses
             if (this.currentAnswer) {
-                guessesTable += `<td>${this.currentAnswer}</td><td><button ${revealButton}>Reveal</button></td></tr>`;
+                guessesTable += `<td>${this.currentAnswer}</td>
+                    <td><button ${revealButton} onclick="${onRevealClick}">Reveal</button></td></tr>`;
             } else {
-                guessesTable += `<td style="color: gray;">Waiting for answer...</td><td><button ${revealButton}>Reveal</button></td></tr>`;
+                guessesTable += `<td style="color: gray;">Waiting for answer...</td>
+                    <td><button ${revealButton} onclick="${onRevealClick}">Reveal</button></td></tr>`;
             }
         }
     });
 
     guessesTable += `</table>`;
     plotAreaElem.html(guessesTable);
+}
+
+function revealGuess(username) {
+    $.post('/revealGuess?username=' + username);
 }
 
 function lockInGuess(guess) {
