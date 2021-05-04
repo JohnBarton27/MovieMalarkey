@@ -145,20 +145,20 @@ function displayHostGuessesTable(plot, revealButtons = false) {
     $.each(room.users, function() {
         guessesTable += `<tr><td>${this.name}</td>`;
 
-        let onRevealClick = `revealGuess('${this.name}');`;
+        let btnHtml = `<button id="${this.name}-reveal-btn" ${revealButton} onclick="revealGuess('${this.name}');">Reveal</button>`;
 
         if (this.name === room.judge.name) {
             // The "judge" uses the real plot for their "answer"
             guessesTable += `<td>${plot}</td>
-                <td><button ${revealButton} onclick="${onRevealClick}">Reveal</button></td></tr>`
+                <td>${btnHtml}</td></tr>`
         } else {
             // All other users have actual answers/guesses
             if (this.currentAnswer) {
                 guessesTable += `<td>${this.currentAnswer}</td>
-                    <td><button ${revealButton} onclick="${onRevealClick}">Reveal</button></td></tr>`;
+                    <td>${btnHtml}</td></tr>`;
             } else {
                 guessesTable += `<td style="color: gray;">Waiting for answer...</td>
-                    <td><button ${revealButton} onclick="${onRevealClick}">Reveal</button></td></tr>`;
+                    <td${btnHtml}</td></tr>`;
             }
         }
     });
