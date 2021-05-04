@@ -23,6 +23,11 @@ class User:
         return self.name
 
     def __eq__(self, other):
+        # Must be the same type
+        if not isinstance(other, User):
+            return False
+
+        # Check for name equivalence
         return self.name == other.name
 
     def __hash__(self):

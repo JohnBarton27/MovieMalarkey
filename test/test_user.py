@@ -21,6 +21,12 @@ class TestUser(unittest.TestCase):
         user = User('User123')
         self.assertEqual(str(user), 'User123')
 
+    def test_eq_diff_types(self):
+        user1 = User('User123')
+        user2 = "I am not a User"
+
+        self.assertNotEqual(user1, user2)
+
     def test_eq_equals(self):
         user1 = User('User123')
         user2 = User('User123')
