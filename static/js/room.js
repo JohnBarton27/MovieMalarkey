@@ -7,6 +7,7 @@ let me = null;
 let userList = null;
 let startButtonElem = null;
 let currentPlot = null;
+let revealedGuesses = [];
 
 let givenTitleElem = null;
 let plotAreaElem = null;
@@ -39,7 +40,7 @@ function initSockets() {
             setRoom(data['room']);
 
             // Update plot guesses table
-            displayGuessesTable(room.movie.plot);
+            displayHostGuessesTable(room.movie.plot);
         } else if (data['event'] == 'all-guesses-submitted') {
             // All guesses have been submitted - we are almost ready to move to the "reading" phase
             prepareForReading();
@@ -125,17 +126,18 @@ function checkForStart(plot) {
 
 function begin() {
     $.post('/openGuesses');
-    displayGuessesTable(currentPlot);
+    displayHostGuessesTable(currentPlot);
 }
 
 function skipMovie() {
     $.post('/startRound?code=' + room_code);
 }
 
-function displayGuessesTable(plot, revealButtons = false) {
+function displayHostGuessesTable(plot, revealButtons = false) {
     // Build table
     let guessesTable = `<table><tr><th>User</th><th>Guess</th><th>Reveal</th></tr>`;
 
+    // TODO disable reveal buttons after click (to stop a clue from being revealed twice)
     let revealButton = `disabled`;
     if (revealButtons) {
         revealButton = ``;
@@ -165,6 +167,18 @@ function displayGuessesTable(plot, revealButtons = false) {
     plotAreaElem.html(guessesTable);
 }
 
+function displayGuessTable() {
+    let guessesTable = `<table><tr><th>Guess</th><th>Vote</th></tr>`;
+
+    $.each(revealedGuesses, function() {
+        guessesTable += `<tr><td>${this}</td><td><button>Vote!</button></td></tr>`;
+    });
+
+    guessesTable += `</table>`;
+
+    plotAreaElem.html(guessesTable);
+}
+
 function revealGuess(username) {
     $.post('/revealGuess?username=' + username);
 }
@@ -185,7 +199,7 @@ function displayWaitingForJudge() {
 function prepareForReading() {
     if (myUsername === room.judge.name) {
         // If this user is the judge, unlock the "reveal" buttons
-        displayGuessesTable(room.movie.plot, revealButtons=true);
+        displayHostGuessesTable(room.movie.plot, revealButtons=true);
     } else {
         // Give guessers a message
         plotAreaElem.html(`<p>The judge is reading all responses - soon, you will vote on which you think is the real plot!</p>`);
@@ -193,7 +207,11 @@ function prepareForReading() {
 }
 
 function revealGuessToAll(guess) {
-    console.log(guess);
+    revealedGuesses.push(guess);
+
+    if (myUsername !== room.judge.name) {
+        displayGuessTable();
+    }
 }
 
 function submitGuess() {
@@ -226,7 +244,7 @@ function setRoom(inlineRoom) {
     if (room.movie && givenTitleElem.is(':empty')) {
         displayTitle(room.movie.title);
         if (myUsername === room.judge.name) {
-            displayGuessesTable(room.movie.plot);
+            displayHostGuessesTable(room.movie.plot);
         }
     }
 }
