@@ -44,6 +44,10 @@ body {
     font-family: Nunito;
 }
 
+table {
+    width: 100%;
+}
+
 table td, table td * {
     vertical-align: top;
 }
@@ -63,11 +67,11 @@ ul {
 }
 
 .column-large {
-    flex: 67%;
+    flex: 80%;
 }
 
 .column-small {
-    flex: 33%;
+    flex: 20%;
 }
 
 .btn {
