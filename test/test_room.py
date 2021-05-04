@@ -88,6 +88,36 @@ class TestRoom(unittest.TestCase):
 
         self.assertEqual(guessers, [TestRoom.user1, TestRoom.user2, TestRoom.user3])
 
+    def test_all_guesses_submitted_no_submission(self):
+        room = Room(TestRoom.user1)
+        room.add_user(TestRoom.user2)
+        room.add_user(TestRoom.user3)
+
+        room.current_judge = TestRoom.user1
+
+        self.assertFalse(room.all_guesses_submitted)
+
+    def test_all_guesses_submitted_some_submissions(self):
+        room = Room(TestRoom.user1)
+        room.add_user(TestRoom.user2)
+        room.add_user(TestRoom.user3)
+
+        room.current_judge = TestRoom.user1
+        TestRoom.user2.current_answer = "A plot for a film"
+
+        self.assertFalse(room.all_guesses_submitted)
+
+    def test_all_guesses_submitted_all_submissions(self):
+        room = Room(TestRoom.user1)
+        room.add_user(TestRoom.user2)
+        room.add_user(TestRoom.user3)
+
+        room.current_judge = TestRoom.user1
+        TestRoom.user2.current_answer = "A plot for a film"
+        TestRoom.user3.current_answer = "An even better plot for a movie!"
+
+        self.assertTrue(room.all_guesses_submitted)
+
     def test_add_user_new_user(self):
         room = Room(TestRoom.user1)
         user2 = User('Jessica')

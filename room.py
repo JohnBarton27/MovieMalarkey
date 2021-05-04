@@ -56,6 +56,16 @@ class Room:
 
         return guessers
 
+    @property
+    def all_guesses_submitted(self):
+        """
+        Checks to see if all guesses for the round have been submitted.
+
+        Returns:
+            bool: True if all 'guessers' have submitted an answer; False if at least one has not guessed
+        """
+        return all(user.current_answer for user in self.guessers)
+
     def add_user(self, user: User):
         """
         Add the given user to this Room (handles ensuring no duplicate users)
