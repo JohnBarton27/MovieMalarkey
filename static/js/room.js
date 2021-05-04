@@ -169,13 +169,19 @@ function displayHostGuessesTable(plot, revealButtons = false) {
 function displayGuessTable() {
     let guessesTable = `<table><tr><th>Guess</th><th>Vote</th></tr>`;
 
-    $.each(revealedGuesses, function() {
-        guessesTable += `<tr><td>${this}</td><td><button>Vote!</button></td></tr>`;
+    $.each(revealedGuesses, function(index) {
+        guessesTable += `<tr><td>${this}</td><td><button class="voteBtn" onclick="vote('${index}');">Vote!</button></td></tr>`;
     });
 
     guessesTable += `</table>`;
 
     plotAreaElem.html(guessesTable);
+}
+
+// Guesser submits a vote for the given plot
+function vote(guessIndex) {
+    // Disable all vote buttons (user can only vote once per round)
+    $(".voteBtn").prop("disabled", true);
 }
 
 function revealGuess(username) {
