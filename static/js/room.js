@@ -137,7 +137,6 @@ function displayHostGuessesTable(plot, revealButtons = false) {
     // Build table
     let guessesTable = `<table><tr><th>User</th><th>Guess</th><th>Reveal</th></tr>`;
 
-    // TODO disable reveal buttons after click (to stop a clue from being revealed twice)
     let revealButton = `disabled`;
     if (revealButtons) {
         revealButton = ``;
@@ -180,6 +179,10 @@ function displayGuessTable() {
 }
 
 function revealGuess(username) {
+    // Disable button to stop from revealing twice
+    $("#" + username + "-reveal-btn").prop("disabled", true);
+
+    // Send signal to server
     $.post('/revealGuess?username=' + username);
 }
 
