@@ -39,7 +39,10 @@ function initSockets() {
             setRoom(data['room']);
 
             // Update plot guesses table
-            displayRealPlot(room.movie.plot);
+            displayGuessesTable(room.movie.plot);
+        } else if (data['event'] == 'all-guesses-submitted') {
+            // All guesses have been submitted - we are almost ready to move to the "reading" phase
+            prepareForReading();
         }
     });
 }
@@ -120,29 +123,33 @@ function checkForStart(plot) {
 
 function begin() {
     $.post('/openGuesses');
-    displayRealPlot(currentPlot);
+    displayGuessesTable(currentPlot);
 }
 
 function skipMovie() {
     $.post('/startRound?code=' + room_code);
 }
 
-function displayRealPlot(plot) {
+function displayGuessesTable(plot, revealButtons = false) {
     // Build table
-    let guessesTable = `<table><tr><th>User</th><th>Guess</th></tr>`;
+    let guessesTable = `<table><tr><th>User</th><th>Guess</th><th>Reveal</th></tr>`;
 
+    let revealButton = `disabled`;
+    if (revealButtons) {
+        revealButton = ``;
+    }
     $.each(room.users, function() {
         guessesTable += `<tr><td>${this.name}</td>`;
 
         if (this.name === room.judge.name) {
             // The "judge" uses the real plot for their "answer"
-            guessesTable += `<td>${plot}</td></tr>`
+            guessesTable += `<td>${plot}</td><td><button ${revealButton}>Reveal</button></td></tr>`
         } else {
             // All other users have actual answers/guesses
             if (this.currentAnswer) {
-                guessesTable += `<td>${this.currentAnswer}</td></tr>`;
+                guessesTable += `<td>${this.currentAnswer}</td><td><button ${revealButton}>Reveal</button></td></tr>`;
             } else {
-                guessesTable += `<td style="color: gray;">Waiting for answer...</td>`
+                guessesTable += `<td style="color: gray;">Waiting for answer...</td><td><button ${revealButton}>Reveal</button></td></tr>`;
             }
         }
     });
@@ -162,7 +169,16 @@ function displayPlotInput() {
 
 function displayWaitingForJudge() {
     plotAreaElem.html(`<p>Waiting for judge to select a movie title/plot...</p>`);
+}
 
+function prepareForReading() {
+    if (myUsername === room.judge.name) {
+        // If this user is the judge, unlock the "reveal" buttons
+        displayGuessesTable(room.movie.plot, revealButtons=true);
+    } else {
+        // Give guessers a message
+        plotAreaElem.html(`<p>The judge is reading all responses - soon, you will vote on which you think is the real plot!</p>`);
+    }
 }
 
 function submitGuess() {
@@ -195,7 +211,7 @@ function setRoom(inlineRoom) {
     if (room.movie && givenTitleElem.is(':empty')) {
         displayTitle(room.movie.title);
         if (myUsername === room.judge.name) {
-            displayRealPlot(room.movie.plot);
+            displayGuessesTable(room.movie.plot);
         }
     }
 }

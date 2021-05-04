@@ -78,6 +78,11 @@ def submit_guess():
     socketio.send({'event': 'user-guess', 'room': room.serialize(full=True)}, json=True,
                   to=room.current_judge.socket_client)
 
+    # All users have submitted
+    if room.all_guesses_submitted:
+        socketio.send({'event': 'all-guesses-submitted', 'room': room.serialize()}, json=True,
+                      to=room.code);
+
     return 'Success'
 
 
