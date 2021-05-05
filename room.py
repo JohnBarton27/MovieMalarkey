@@ -1,6 +1,7 @@
 import random
 import string
 
+from round import Round
 from user import User
 
 
@@ -89,6 +90,15 @@ class Room:
                     existing_user.socket_client = user.socket_client
                     return
 
+    def start_round(self):
+        """
+        Starts a new round in this room
+
+        Returns:
+            None
+        """
+        self.rounds.append(Round(self, len(self.rounds) + 1))
+
     def end_round(self):
         """
         Cleanup method for when a round ends (clears all answers, etc.)
@@ -96,6 +106,8 @@ class Room:
         Returns:
             None
         """
+        self.rounds[-1].end()
+
         # Wipe all answers
         for user in self.users:
             user.current_answer = None

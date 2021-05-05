@@ -159,6 +159,8 @@ def start_round():
     for room in rooms:
         if room.code == room_code:
             # Found the room
+            room.start_round()
+
             movie = Movie.get_random()
             room.current_movie = movie
 
