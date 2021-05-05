@@ -23,3 +23,16 @@ class Round:
 
     def __hash__(self):
         return hash(f'{hash(self.room)}{self.num}')
+
+    def give_points(self, points: int, user):
+        """
+        Give points to the given user
+
+        Args:
+            points (int): Number of points to give to the passed user
+            user (User): User to give points to
+
+        Returns:
+            None
+        """
+        self.scores[user] = self.scores[user] + points

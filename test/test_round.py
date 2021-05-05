@@ -41,7 +41,7 @@ class TestRound(unittest.TestCase):
             TestRound.user2: 0,
             TestRound.user3: 0
         }
-        
+
         self.assertEqual(round1.scores, scores)
 
     def test_repr(self):
@@ -92,6 +92,19 @@ class TestRound(unittest.TestCase):
         self.assertEqual(hash(round1), hash(f'{hash(123)}1'))
 
         m_room_hash.assert_called()
+
+    def test_give_points(self):
+        round1 = Round(TestRound.room1, 1)
+
+        round1.give_points(3, TestRound.user2)
+
+        scores = {
+            TestRound.user1: 0,
+            TestRound.user2: 3,
+            TestRound.user3: 0
+        }
+
+        self.assertEqual(round1.scores, scores)
 
 
 if __name__ == '__main__':
