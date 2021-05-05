@@ -35,4 +35,14 @@ class Round:
         Returns:
             None
         """
-        self.scores[user] = self.scores[user] + points
+        self.scores[user] += points
+
+    def end(self):
+        """
+        Ends the Round. This applies the current Round's scores to the user's 'full' scores in the Room.
+
+        Returns:
+            None
+        """
+        for user in self.scores:
+            user.current_score += self.scores[user]
