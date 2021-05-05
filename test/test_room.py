@@ -28,6 +28,7 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(room.code, 'AB27')
 
         # Defaults/empty
+        self.assertEqual(room.rounds, [])
         self.assertFalse(room.started)
         self.assertIsNone(room.current_judge)
         self.assertIsNone(room.current_movie)

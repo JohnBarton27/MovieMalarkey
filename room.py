@@ -18,6 +18,7 @@ class Room:
         """
         self.host = creator
         self.users = [creator]
+        self.rounds = []
         self.code = Room.generate_code()
         self.current_judge = None
         self.started = False
