@@ -3,6 +3,10 @@ class Round:
     def __init__(self, room, num: int):
         self.room = room
         self.num = num
+        self.scores = {}
+
+        for user in room.users:
+            self.scores[user] = 0
 
     def __repr__(self):
         return str(self.num)

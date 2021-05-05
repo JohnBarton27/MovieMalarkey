@@ -36,6 +36,14 @@ class TestRound(unittest.TestCase):
         self.assertEqual(round1.room, TestRound.room1)
         self.assertEqual(round1.num, 1)
 
+        scores = {
+            TestRound.user1: 0,
+            TestRound.user2: 0,
+            TestRound.user3: 0
+        }
+        
+        self.assertEqual(round1.scores, scores)
+
     def test_repr(self):
         round1 = Round(TestRound.room1, 1)
 
