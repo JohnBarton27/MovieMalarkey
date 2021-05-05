@@ -188,6 +188,14 @@ function displayGuessTable() {
 function vote(guessIndex) {
     // Disable all vote buttons (user can only vote once per round)
     $(".voteBtn").prop("disabled", true);
+
+    $.ajax({
+        url: '/vote',
+        type: 'POST',
+        data: {'guess': revealedGuesses[guessIndex]},
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json'
+    });
 }
 
 function revealGuess(username) {

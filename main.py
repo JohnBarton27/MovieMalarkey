@@ -97,6 +97,29 @@ def reveal_guess():
     return "Success"
 
 
+@app.route('/vote', methods=['POST'])
+def vote():
+    room = _get_room(request.cookies.get('room'))
+    user = _get_user_from_room(request.args.get('username'), room)
+    data = unquote(str(request.data))
+
+    selected_plot = data.split('=')[-1][:-1]
+
+    if selected_plot == room.current_movie.plot:
+        # Correct Guess - voter gets 2 points
+        user.current_score += 2
+        pass
+    else:
+        # Incorrect Guess
+        for guesser in room.guessers:
+            if selected_plot == guesser.current_answer:
+                # 'guesser' gets one point for 'tricking' voter
+                guesser.current_score += 1
+                break
+
+    return "Success"
+
+
 @app.route('/checkRoomCode')
 def check_room_code():
     room = _get_room(request.args.get('code'))
