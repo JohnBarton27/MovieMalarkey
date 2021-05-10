@@ -1,6 +1,8 @@
 # Movie Malarkey
 Welcome to **Movie Malarkey**, a web-based creative multiplayer game.
 
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=MovieMalarkey)](https://sonarcloud.io/dashboard?id=MovieMalarkey)
+
 ## Running Locally
 ### Setup/Pre-requisites
 To run locally, you'll need the following installed:
