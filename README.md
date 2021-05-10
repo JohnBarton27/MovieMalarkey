@@ -38,6 +38,9 @@ This will launch the application at `localhost:8010` by default.
 ## Development
 This section of the README covers development for Movie Malarkey.
 
+### Environment
+For ease of development, you will want to modify your `PYTHONPATH` environment to include `<MOVIE_MALARKEY>/src`.
+
 ### Style & Conventions
 Where possible, follow [PEP 8](https://www.python.org/dev/peps/pep-0008/) conventions.
 
@@ -47,3 +50,16 @@ Movie Malarkey is unit tested with Python's `unittest` framework. To run unit te
 python3 -m unittest discover test
 ```
 This finds and automatically runs all unit tests in the `test` directory.
+
+#### Unit Tests with Coverage
+To run unit tests in a format that can later provide coverage, run:
+```
+python3 scripts/run_tests.py
+```
+
+### SonarQube Coverage
+To run SonarQube analysis, run:
+```
+python3 scripts/run_analysis.py
+```
+This assumes you have your `SONAR_TOKEN` environment variable correctly setup.
