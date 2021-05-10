@@ -68,6 +68,21 @@ class Room:
         """
         return all(user.current_answer for user in self.guessers)
 
+    @property
+    def current_round(self):
+        """
+        Gets the current (or most recent) round, if there is one.
+
+        Returns:
+            Round: Current (or most recent) round
+        """
+        if len(self.rounds) == 0:
+            # No rounds have been started
+            return None
+
+        # Return last round
+        return self.rounds[-1]
+
     def add_user(self, user: User):
         """
         Add the given user to this Room (handles ensuring no duplicate users)
