@@ -31,7 +31,8 @@ options = {
     "sonar.tests": "test",
     "sonar.sources": ['src'],
     "sonar.exclusions": ["scripts/"],
-    "sonar.python.coverage.reportPaths": "coverage.xml"
+    "sonar.python.coverage.reportPaths": "coverage.xml",
+    "sonar.coverage.exclusions": ['src/main.py']
 }
 
 sonar_scanner_location = "/opt/sonar-scanner/current/bin/sonar-scanner"
