@@ -1,4 +1,8 @@
 .idea
+.scannerwork
+.coverage
+coverage.xml
 dataset
 venv
+test-reports
 **/__pycache__/**
