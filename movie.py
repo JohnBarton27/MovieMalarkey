@@ -26,10 +26,20 @@ class Movie:
     def populate(self):
         self._imdbpy_movie = Movie.ia.get_movie(self.id)
 
-    def serialize(self):
+    def serialize(self, full=False):
+        """
+        Serializes the object as JSON.
+
+        Args:
+            full (bool): If True, returns all data. If False, does not return the Plot of the Movie. This can be useful
+             when hiding the 'correct' plot from the guessers.
+
+        Returns:
+            dict: JSON representation of this Movie
+        """
         return {
             'title': self.title,
-            'plot': self.plot
+            'plot': self.plot if full else None
         }
 
     @property

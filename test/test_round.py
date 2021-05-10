@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from room import Room
 from round import Round
@@ -43,6 +43,7 @@ class TestRound(unittest.TestCase):
         }
 
         self.assertEqual(round1.scores, scores)
+        self.assertIsNone(round1.movie)
 
     def test_repr(self):
         round1 = Round(TestRound.room1, 1)
@@ -128,6 +129,35 @@ class TestRound(unittest.TestCase):
         self.assertEqual(TestRound.user1.current_score, 13)
         self.assertEqual(TestRound.user2.current_score, 17)
         self.assertEqual(TestRound.user3.current_score, 21)
+
+    def test_serialize_no_movie(self):
+        round1 = Round(TestRound.room1, 1)
+
+        ser = {'number': 1, 'movie': ''}
+
+        self.assertEqual(round1.serialize(), ser)
+
+    def test_serialize_full(self):
+        round1 = Round(TestRound.room1, 1)
+        movie = MagicMock()
+        movie.serialize.return_value = 'A movie'
+        round1.movie = movie
+
+        ser = {'number': 1, 'movie': 'A movie'}
+
+        self.assertEqual(round1.serialize(full=True), ser)
+        movie.serialize.assert_called_with(full=True)
+
+    def test_serialize_not_full(self):
+        round1 = Round(TestRound.room1, 1)
+        movie = MagicMock()
+        movie.serialize.return_value = 'A movie'
+        round1.movie = movie
+
+        ser = {'number': 1, 'movie': 'A movie'}
+
+        self.assertEqual(round1.serialize(full=False), ser)
+        movie.serialize.assert_called_with(full=False)
 
 
 if __name__ == '__main__':

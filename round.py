@@ -4,6 +4,7 @@ class Round:
         self.room = room
         self.num = num
         self.scores = {}
+        self.movie = None
 
         for user in room.users:
             self.scores[user] = 0
@@ -46,3 +47,9 @@ class Round:
         """
         for user in self.scores:
             user.current_score += self.scores[user]
+
+    def serialize(self, full=False):
+        return {
+            'number': self.num,
+            'movie': self.movie.serialize(full=full) if self.movie else ''
+        }
