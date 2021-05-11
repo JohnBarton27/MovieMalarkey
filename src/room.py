@@ -5,6 +5,7 @@ from round import Round
 from user import User
 
 
+# TODO add Phase Enum to Room (instead of tracking in JavaScript, which will not properly handle refreshes)
 class Room:
     """
     Class for representing "Rooms"
