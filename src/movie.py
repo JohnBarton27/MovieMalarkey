@@ -12,6 +12,14 @@ class Movie:
     ia = IMDb()
 
     def __init__(self, title: str, year: str, movie_id: str = None):
+        """
+        Constructor for Movie object
+
+        Args:
+            title (str): Title of the Movie
+            year (str): Year of the Movie's release. Uses a str for non-standard years ('N/A', 'Unknown', etc.)
+            movie_id (str, Optional): IMDb ID of the Movie (if given). Defaults to None
+        """
         self.title = title
         self.year = year
         self.id = movie_id
@@ -22,6 +30,13 @@ class Movie:
 
     def __str__(self):
         return repr(self)
+
+    @property
+    def plot(self):
+        raw_plot = self._imdbpy_movie["plot"][0]
+
+        # Some plots seem to use '::' to credit the author of the plot summary
+        return raw_plot.split('::')[0]
 
     def populate(self):
         self._imdbpy_movie = Movie.ia.get_movie(self.id)
@@ -39,15 +54,8 @@ class Movie:
         """
         return {
             'title': self.title,
-            'plot': self.plot if full else None
+            'plot': self.plot if full else ''
         }
-
-    @property
-    def plot(self):
-        raw_plot = self._imdbpy_movie["plot"][0]
-
-        # Some plots seem to use '::' to credit the author of the plot summary
-        return raw_plot.split('::')[0]
 
     @staticmethod
     def get_random():
