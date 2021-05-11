@@ -156,9 +156,6 @@ class Room:
         """
         self.started = True
 
-        # Randomly select first judge
-        self.current_judge = random.choice(self.users)
-
     def stop(self):
         """
         Stops/Ends the game in this room

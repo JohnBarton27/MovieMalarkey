@@ -314,26 +314,15 @@ class TestRoom(unittest.TestCase):
         m_user_serialize.assert_called()
         current_round.serialize.assert_called()
 
-    @patch('room.random.choice')
-    @patch('room.Room.generate_code')
-    def test_start(self, m_generate_code, m_choice):
+    def test_start(self):
         room = Room(TestRoom.user1)
-
-        # We don't actually need to test if generate_code() is working, but since we're
-        # patching random.choice(), it won't work, so we need to patch it as well
-        m_generate_code.assert_called()
 
         # Room should not be started upon __init__
         self.assertFalse(room.started)
 
-        selected_user = MagicMock()
-        m_choice.return_value = selected_user
-
         room.start()
-        m_choice.assert_called_with(room.users)
 
         self.assertTrue(room.started)
-        self.assertEqual(room.current_judge, selected_user)
 
     def test_stop(self):
         room = Room(TestRoom.user1)
