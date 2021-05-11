@@ -111,7 +111,7 @@ def vote():
         pass
     else:
         # Incorrect Guess
-        for guesser in room.guessers:
+        for guesser in room.current_round.guessers:
             if selected_plot == guesser.current_answer:
                 # 'guesser' gets one point for 'tricking' voter
                 guesser.current_score += 1
@@ -168,7 +168,7 @@ def start_round():
             socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_judge.socket_client)
 
             # Send notification to guessers that the judge is selecting a movie title
-            for guesser in room.guessers:
+            for guesser in room.current_round.guessers:
                 socketio.send({'event': 'judge-selecting'}, json=True,
                               to=guesser.socket_client)
 
@@ -189,7 +189,7 @@ def open_guesses():
     room = _get_room(request.cookies.get('room'))
 
     # Send title to rest of users
-    for guesser in room.guessers:
+    for guesser in room.current_round.guessers:
         socketio.send({'event': 'movie-title', 'title': room.current_round.movie.title}, json=True,
                       to=guesser.socket_client)
 
@@ -224,7 +224,7 @@ def connect(data):
             join_room(room.code)
 
             # TODO remove 'plot' from movies if not sending to judge
-            if room.current_judge and user == room.current_judge:
+            if room.current_round.judge and user == room.current_round.judge:
                 print(f'This user ({user.name}) is the current judge!')
                 # Send full (including current answers) to judge - this handles the judge refreshing their page and
                 # "re-joining" the game
@@ -232,7 +232,7 @@ def connect(data):
 
                 # Send the judge joining event to all other users (but not the judge, or this would wipe the answers
                 # the judge has)
-                for guesser in room.guessers:
+                for guesser in room.current_round.guessers:
                     send({'event': 'new-user', 'username': user.name, 'room': room.serialize()}, json=True,
                          to=guesser.socket_client)
             else:

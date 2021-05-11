@@ -5,6 +5,7 @@ class Round:
         self.num = num
         self.scores = {}
         self.movie = None
+        self.judge = None
 
         for user in room.users:
             self.scores[user] = 0
@@ -24,6 +25,27 @@ class Round:
 
     def __hash__(self):
         return hash(f'{hash(self.room)}{self.num}')
+
+    @property
+    def guessers(self):
+        """
+        Gets all guessers (everyone but the current judge). Can be useful when sending two different socket events -
+        one to the judge, and one to the guessers (less information, etc.)
+
+        Returns:
+            list: List of User objects
+        """
+        guessers = []
+
+        if not self.judge:
+            # If there is no judge, treat everyone as a guesser
+            return self.room.users
+
+        for user in self.room.users:
+            if user != self.judge:
+                guessers.append(user)
+
+        return guessers
 
     def give_points(self, points: int, user):
         """
@@ -51,5 +73,6 @@ class Round:
     def serialize(self, full=False):
         return {
             'number': self.num,
+            'judge': self.judge.serialize(full=full) if self.judge else '',
             'movie': self.movie.serialize(full=full) if self.movie else ''
         }

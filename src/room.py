@@ -21,7 +21,6 @@ class Room:
         self.users = [creator]
         self.rounds = []
         self.code = Room.generate_code()
-        self.current_judge = None
         self.started = False
 
     def __repr__(self):
@@ -37,27 +36,6 @@ class Room:
         return hash(self.code)
 
     @property
-    def guessers(self):
-        """
-        Gets all guessers (everyone but the current judge). Can be useful when sending two different socket events -
-        one to the judge, and one to the guessers (less information, etc.)
-
-        Returns:
-            list: List of User objects
-        """
-        guessers = []
-
-        if not self.current_judge:
-            # If there is no judge, treat everyone as a guesser
-            return self.users
-
-        for user in self.users:
-            if user != self.current_judge:
-                guessers.append(user)
-
-        return guessers
-
-    @property
     def all_guesses_submitted(self):
         """
         Checks to see if all guesses for the round have been submitted.
@@ -65,7 +43,7 @@ class Room:
         Returns:
             bool: True if all 'guessers' have submitted an answer; False if at least one has not guessed
         """
-        return all(user.current_answer for user in self.guessers)
+        return all(user.current_answer for user in self.current_round.guessers)
 
     @property
     def current_round(self) -> Round:
@@ -148,7 +126,6 @@ class Room:
         return {
             'code': self.code,
             'host': self.host.serialize(),
-            'judge': self.current_judge.serialize(full=full) if self.current_judge else '',
             'round': self.current_round.serialize(full=full) if self.current_round else '',
             'started': str(self.started),
             'users': [user.serialize(full=full) for user in self.users]

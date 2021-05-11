@@ -44,6 +44,7 @@ class TestRound(unittest.TestCase):
 
         self.assertEqual(round1.scores, scores)
         self.assertIsNone(round1.movie)
+        self.assertIsNone(round1.judge)
 
     def test_repr(self):
         round1 = Round(TestRound.room1, 1)
@@ -94,6 +95,21 @@ class TestRound(unittest.TestCase):
 
         m_room_hash.assert_called()
 
+    def test_guessers_with_judge(self):
+        round1 = Round(TestRound.room1, 1)
+        round1.judge = TestRound.user2
+
+        guessers = round1.guessers
+
+        self.assertEqual(guessers, [TestRound.user1, TestRound.user3])
+
+    def test_guessers_no_judge(self):
+        round1 = Round(TestRound.room1, 1)
+
+        guessers = round1.guessers
+
+        self.assertEqual(guessers, [TestRound.user1, TestRound.user2, TestRound.user3])
+
     def test_give_points(self):
         round1 = Round(TestRound.room1, 1)
 
@@ -133,7 +149,11 @@ class TestRound(unittest.TestCase):
     def test_serialize_no_movie(self):
         round1 = Round(TestRound.room1, 1)
 
-        ser = {'number': 1, 'movie': ''}
+        ser = {
+            'judge': '',
+            'movie': '',
+            'number': 1
+        }
 
         self.assertEqual(round1.serialize(), ser)
 
@@ -143,7 +163,11 @@ class TestRound(unittest.TestCase):
         movie.serialize.return_value = 'A movie'
         round1.movie = movie
 
-        ser = {'number': 1, 'movie': 'A movie'}
+        ser = {
+            'judge': '',
+            'movie': 'A movie',
+            'number': 1
+        }
 
         self.assertEqual(round1.serialize(full=True), ser)
         movie.serialize.assert_called_with(full=True)
@@ -154,10 +178,31 @@ class TestRound(unittest.TestCase):
         movie.serialize.return_value = 'A movie'
         round1.movie = movie
 
-        ser = {'number': 1, 'movie': 'A movie'}
+        ser = {
+            'judge': '',
+            'movie': 'A movie',
+            'number': 1
+        }
 
         self.assertEqual(round1.serialize(full=False), ser)
         movie.serialize.assert_called_with(full=False)
+
+    @patch('user.User.serialize')
+    def test_serialize_with_judge(self, m_user_serialize):
+        round1 = Round(TestRound.room1, 1)
+
+        m_user_serialize.return_value = {'name': 'USER1'}
+        round1.judge = TestRound.user1
+
+        correct_serialized = {
+            'judge': {'name': 'USER1'},
+            'movie': '',
+            'number': 1
+        }
+
+        self.assertEqual(round1.serialize(), correct_serialized)
+
+        m_user_serialize.assert_called()
 
 
 if __name__ == '__main__':

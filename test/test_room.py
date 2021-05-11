@@ -30,7 +30,6 @@ class TestRoom(unittest.TestCase):
         # Defaults/empty
         self.assertEqual(room.rounds, [])
         self.assertFalse(room.started)
-        self.assertIsNone(room.current_judge)
 
     def test_repr(self):
         room = Room(TestRoom.user1)
@@ -68,55 +67,49 @@ class TestRoom(unittest.TestCase):
 
         self.assertEqual(hash(room), hash('1234'))
 
-    def test_guessers_with_judge(self):
+    @patch('room.Room.current_round', new_callable=PropertyMock)
+    def test_all_guesses_submitted_no_submission(self, m_round):
         room = Room(TestRoom.user1)
         room.add_user(TestRoom.user2)
         room.add_user(TestRoom.user3)
 
-        room.current_judge = TestRoom.user2
-
-        guessers = room.guessers
-
-        self.assertEqual(guessers, [TestRoom.user1, TestRoom.user3])
-
-    def test_guessers_no_judge(self):
-        room = Room(TestRoom.user1)
-        room.add_user(TestRoom.user2)
-        room.add_user(TestRoom.user3)
-
-        guessers = room.guessers
-
-        self.assertEqual(guessers, [TestRoom.user1, TestRoom.user2, TestRoom.user3])
-
-    def test_all_guesses_submitted_no_submission(self):
-        room = Room(TestRoom.user1)
-        room.add_user(TestRoom.user2)
-        room.add_user(TestRoom.user3)
-
-        room.current_judge = TestRoom.user1
+        cur_round = MagicMock()
+        cur_round.guessers = [TestRoom.user2, TestRoom.user3]
+        m_round.return_value = cur_round
 
         self.assertFalse(room.all_guesses_submitted)
+        m_round.assert_called()
 
-    def test_all_guesses_submitted_some_submissions(self):
+    @patch('room.Room.current_round', new_callable=PropertyMock)
+    def test_all_guesses_submitted_some_submissions(self, m_round):
         room = Room(TestRoom.user1)
         room.add_user(TestRoom.user2)
         room.add_user(TestRoom.user3)
 
-        room.current_judge = TestRoom.user1
+        cur_round = MagicMock()
+        cur_round.guessers = [TestRoom.user2, TestRoom.user3]
+        m_round.return_value = cur_round
+
         TestRoom.user2.current_answer = "A plot for a film"
 
         self.assertFalse(room.all_guesses_submitted)
+        m_round.assert_called()
 
-    def test_all_guesses_submitted_all_submissions(self):
+    @patch('room.Room.current_round', new_callable=PropertyMock)
+    def test_all_guesses_submitted_all_submissions(self, m_round):
         room = Room(TestRoom.user1)
         room.add_user(TestRoom.user2)
         room.add_user(TestRoom.user3)
 
-        room.current_judge = TestRoom.user1
+        cur_round = MagicMock()
+        cur_round.guessers = [TestRoom.user2, TestRoom.user3]
+        m_round.return_value = cur_round
+
         TestRoom.user2.current_answer = "A plot for a film"
         TestRoom.user3.current_answer = "An even better plot for a movie!"
 
         self.assertTrue(room.all_guesses_submitted)
+        m_round.assert_called()
 
     def test_current_round_no_rounds(self):
         room = Room(TestRoom.user1)
@@ -224,7 +217,6 @@ class TestRoom(unittest.TestCase):
         correct_serialized = {
             'code': 'ABCD',
             'host': {'name': 'USER1'},
-            'judge': '',
             'round': '',
             'started': 'False',
             'users': [{'name': 'USER1'}]
@@ -244,7 +236,6 @@ class TestRoom(unittest.TestCase):
         correct_serialized = {
             'code': 'ABCD',
             'host': {'name': 'USER1'},
-            'judge': '',
             'round': '',
             'started': 'False',
             'users': [{'name': 'USER1'}]
@@ -253,27 +244,6 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(room.serialize(full=True), correct_serialized)
 
         m_user_serialize.assert_called_with(full=True)
-
-    @patch('user.User.serialize')
-    def test_serialize_with_judge(self, m_user_serialize):
-        room = Room(TestRoom.user1)
-        room.code = 'ABCD'
-
-        m_user_serialize.return_value = {'name': 'USER1'}
-        room.current_judge = TestRoom.user1
-
-        correct_serialized = {
-            'code': 'ABCD',
-            'host': {'name': 'USER1'},
-            'judge': {'name': 'USER1'},
-            'round': '',
-            'started': 'False',
-            'users': [{'name': 'USER1'}]
-        }
-
-        self.assertEqual(room.serialize(), correct_serialized)
-
-        m_user_serialize.assert_called()
 
     @patch('user.User.serialize')
     @patch('room.Room.current_round', new_callable=PropertyMock)
@@ -290,7 +260,6 @@ class TestRoom(unittest.TestCase):
         correct_serialized = {
             'code': 'ABCD',
             'host': {'name': 'USER1'},
-            'judge': '',
             'round': {'number': '1'},
             'started': 'False',
             'users': [{'name': 'USER1'}]
