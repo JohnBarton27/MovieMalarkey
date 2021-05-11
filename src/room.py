@@ -60,6 +60,21 @@ class Room:
         # Return last round
         return self.rounds[-1]
 
+    @property
+    def previous_round(self) -> Round:
+        """
+        Gets the previous round, if there is one.
+
+        Returns:
+            Round: Previous round
+        """
+        if len(self.rounds) == 1:
+            # No previous rounds
+            return None
+
+        # Return previous round
+        return self.rounds[-2]
+
     def add_user(self, user: User):
         """
         Add the given user to this Room (handles ensuring no duplicate users)

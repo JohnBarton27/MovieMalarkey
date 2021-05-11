@@ -134,6 +134,38 @@ class TestRoom(unittest.TestCase):
 
         self.assertEqual(room.current_round, round3)
 
+    def test_previous_round_no_rounds(self):
+        room = Room(TestRoom.user1)
+
+        self.assertIsNone(room.previous_round)
+
+    def test_previous_round_one_round(self):
+        room = Room(TestRoom.user1)
+
+        round1 = MagicMock()
+        room.rounds = [round1]
+
+        self.assertIsNone(room.previous_round)
+
+    def test_previous_round_two_rounds(self):
+        room = Room(TestRoom.user1)
+
+        round1 = MagicMock()
+        round2 = MagicMock()
+        room.rounds = [round1, round2]
+
+        self.assertEqual(room.previous_round, round1)
+
+    def test_previous_round_three_rounds(self):
+        room = Room(TestRoom.user1)
+
+        round1 = MagicMock()
+        round2 = MagicMock()
+        round3 = MagicMock()
+        room.rounds = [round1, round2, round3]
+
+        self.assertEqual(room.previous_round, round2)
+
     def test_add_user_new_user(self):
         room = Room(TestRoom.user1)
         user2 = User('Jessica')
