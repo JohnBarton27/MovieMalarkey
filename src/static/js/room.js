@@ -27,6 +27,7 @@ function initSockets() {
             setRoom(data['room']);
         } else if (data['event'] == "movie") {
             // Full Movie (for judge)
+            setRoom(data['room']);
             displayTitle(data['title']);
             currentPlot = data['plot'];
             checkForStart(data['plot']);
@@ -39,6 +40,7 @@ function initSockets() {
             setRoom(data['room']);
         } else if (data['event'] == "judge-selecting") {
             phase = "SELECTING";
+            setRoom(data['room']);
             displayWaitingForJudge();
         } else if (data['event'] == 'user-guess') {
             setRoom(data['room']);
@@ -264,7 +266,8 @@ function setRoom(inlineRoom) {
         }
     });
 
-    if (room.round && room.round.movie && givenTitleElem.is(':empty')) {
+    if (phase != "SELECTING" && room.round && room.round.movie
+     && givenTitleElem.is(':empty')) {
         displayTitle(room.round.movie.title);
         if (myUsername === room.round.judge.name) {
             displayHostGuessesTable(room.round.movie.plot);
