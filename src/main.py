@@ -225,7 +225,7 @@ def connect(data):
             join_room(room.code)
 
             # TODO remove 'plot' from movies if not sending to judge
-            if room.current_round.judge and user == room.current_round.judge:
+            if room.current_round and room.current_round.judge and user == room.current_round.judge:
                 print(f'This user ({user.name}) is the current judge!')
                 # Send full (including current answers) to judge - this handles the judge refreshing their page and
                 # "re-joining" the game
