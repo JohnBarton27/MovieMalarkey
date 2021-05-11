@@ -1,12 +1,13 @@
 from flask import Flask, make_response, render_template, request
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
+import os
 from urllib.parse import unquote
 
 from movie import Movie
 from room import Room
 from user import User
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder=os.path.abspath('../templates'))
 socketio = SocketIO(app)
 rooms = []
 users = []
