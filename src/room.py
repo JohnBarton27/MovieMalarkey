@@ -68,7 +68,7 @@ class Room:
         Returns:
             Round: Previous round
         """
-        if len(self.rounds) == 1:
+        if len(self.rounds) <= 1:
             # No previous rounds
             return None
 
