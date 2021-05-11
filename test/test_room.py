@@ -180,16 +180,26 @@ class TestRoom(unittest.TestCase):
         room.add_user(user2)
         self.assertEqual(room.users, [TestRoom.user1])
 
-    def test_start_round(self):
+    @patch('room.Room.select_next_judge')
+    def test_start_round(self, m_next_judge):
         room = Room(TestRoom.user1)
+
+        user1 = MagicMock()
+        m_next_judge.return_value = user1
 
         room.start_round()
 
         self.assertEqual(len(room.rounds), 1)
         self.assertEqual(room.rounds[0].num, 1)
+        self.assertEqual(room.current_round.judge, user1)
+        m_next_judge.assert_called()
 
-    def test_start_round_two_rounds(self):
+    @patch('room.Room.select_next_judge')
+    def test_start_round_two_rounds(self, m_next_judge):
         room = Room(TestRoom.user1)
+
+        user1 = MagicMock()
+        m_next_judge.return_value = user1
 
         room.start_round()
         room.start_round()
@@ -197,6 +207,8 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(len(room.rounds), 2)
         self.assertEqual(room.rounds[0].num, 1)
         self.assertEqual(room.rounds[1].num, 2)
+        self.assertEqual(room.current_round.judge, user1)
+        m_next_judge.assert_called()
 
     @patch('room.Room.select_next_judge')
     def test_end_round(self, m_next_judge):

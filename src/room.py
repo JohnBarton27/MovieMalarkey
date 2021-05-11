@@ -105,6 +105,7 @@ class Room:
             None
         """
         self.rounds.append(Round(self, len(self.rounds) + 1))
+        self.current_round.judge = self.select_next_judge()
 
     def end_round(self):
         """
