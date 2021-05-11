@@ -92,7 +92,7 @@ def reveal_guess():
     room = _get_room(request.cookies.get('room'))
     user = _get_user_from_room(request.args.get('username'), room)
 
-    answer_to_reveal = room.current_round.movie.plot if user == room.current_judge else user.current_answer
+    answer_to_reveal = room.current_round.movie.plot if user == room.current_round.judge else user.current_answer
     print(f'Revealing "{answer_to_reveal}"...')
     socketio.send({'event': 'guess-reveal', 'plot': answer_to_reveal}, json=True, to=room.code)
     return "Success"
@@ -166,7 +166,7 @@ def start_round():
             room.current_round.movie = movie
 
             # Send title & plot to host
-            socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_judge.socket_client)
+            socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_round.judge.socket_client)
 
             # Send notification to guessers that the judge is selecting a movie title
             for guesser in room.current_round.guessers:
@@ -229,7 +229,7 @@ def connect(data):
                 print(f'This user ({user.name}) is the current judge!')
                 # Send full (including current answers) to judge - this handles the judge refreshing their page and
                 # "re-joining" the game
-                send({'event': 'new-user', 'username': user.name, 'room': room.serialize(full=True)}, json=True, to=room.current_judge.socket_client)
+                send({'event': 'new-user', 'username': user.name, 'room': room.serialize(full=True)}, json=True, to=room.current_round.judge.socket_client)
 
                 # Send the judge joining event to all other users (but not the judge, or this would wipe the answers
                 # the judge has)
