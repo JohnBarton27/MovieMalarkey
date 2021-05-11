@@ -5,7 +5,7 @@ from random import randrange
 
 class Movie:
 
-    # Get location of Movie Malarkey source (for proper retrival of stripped dataset)
+    # Get location of Movie Malarkey source (for proper retrieval of stripped dataset)
     movie_malarkey_loc = pathlib.Path(__file__).parent.absolute().parent.absolute()
     local_datastore = pathlib.Path.joinpath(movie_malarkey_loc, 'dataset/malarkey.tsv')
 
