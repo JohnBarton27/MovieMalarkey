@@ -166,16 +166,22 @@ class Room:
         self.started = False
 
     def select_next_judge(self):
-        if not self.current_judge:
-            # If we somehow don't already have a judge, pick a random user from the room
-            self.current_judge = random.choice(self.users)
-            return
+        """
+        Selects the next judge for this room. This normally selects judges in a round-robin pattern.
+         If there has not been a previous room (and this is therefore picking the 'first' judge), it selects one
+         randomly.
 
-        index = self.users.index(self.current_judge)
+        Returns:
+            User: The next judge for this Room
+        """
+        if not self.previous_round:
+            # If this is our first round, pick a random user from the room
+            return random.choice(self.users)
+
+        index = self.users.index(self.previous_round.judge)
         index += 1
         if index == len(self.users):
             # We were at the 'last' user, so loop around & restart
-            self.current_judge = self.users[0]
-            return
+            return self.users[0]
 
-        self.current_judge = self.users[index]
+        return self.users[index]
