@@ -44,7 +44,7 @@ function initSockets() {
             setRoom(data['room']);
 
             // Update plot guesses table
-            displayHostGuessesTable(room.movie.plot);
+            displayHostGuessesTable(room.round.movie.plot);
         } else if (data['event'] == 'all-guesses-submitted') {
             // All guesses have been submitted - we are almost ready to move to the "reading" phase
             phase = "VOTING";
@@ -76,7 +76,7 @@ function updateUserList() {
         let className = ``;
         let hasSubmitted = ``;
 
-        if (this.name === room.judge.name) {
+        if (room.round && this.name === room.round.judge.name) {
             // If this user is the judge
             isJudge = `<i class="fas fa-gavel"></i>`;
         }
@@ -152,7 +152,7 @@ function displayHostGuessesTable(plot, revealButtons = false) {
 
         let btnHtml = `<button id="${this.name}-reveal-btn" ${revealButton} onclick="revealGuess('${this.name}');">Reveal</button>`;
 
-        if (this.name === room.judge.name) {
+        if (this.name === room.round.judge.name) {
             // The "judge" uses the real plot for their "answer"
             guessesTable += `<td>${plot}</td>
                 <td>${btnHtml}</td></tr>`
@@ -220,9 +220,9 @@ function displayWaitingForJudge() {
 }
 
 function prepareForReading() {
-    if (myUsername === room.judge.name) {
+    if (myUsername === room.round.judge.name) {
         // If this user is the judge, unlock the "reveal" buttons
-        displayHostGuessesTable(room.movie.plot, revealButtons=true);
+        displayHostGuessesTable(room.round.movie.plot, revealButtons=true);
     } else {
         // Give guessers a message
         plotAreaElem.html(`<p>The judge is reading all responses - soon, you will vote on which you think is the real plot!</p>`);
@@ -232,7 +232,7 @@ function prepareForReading() {
 function revealGuessToAll(guess) {
     revealedGuesses.push(guess);
 
-    if (myUsername !== room.judge.name) {
+    if (myUsername !== room.round.judge.name) {
         displayGuessTable();
     }
 }
@@ -264,10 +264,10 @@ function setRoom(inlineRoom) {
         }
     });
 
-    if (room.movie && givenTitleElem.is(':empty')) {
-        displayTitle(room.movie.title);
-        if (myUsername === room.judge.name) {
-            displayHostGuessesTable(room.movie.plot);
+    if (room.round && room.round.movie && givenTitleElem.is(':empty')) {
+        displayTitle(room.round.movie.title);
+        if (myUsername === room.round.judge.name) {
+            displayHostGuessesTable(room.round.movie.plot);
         }
     }
 }
