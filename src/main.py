@@ -91,7 +91,7 @@ def reveal_guess():
     room = _get_room(request.cookies.get('room'))
     user = _get_user_from_room(request.args.get('username'), room)
 
-    answer_to_reveal = room.current_movie.plot if user == room.current_judge else user.current_answer
+    answer_to_reveal = room.current_round.movie.plot if user == room.current_judge else user.current_answer
     print(f'Revealing "{answer_to_reveal}"...')
     socketio.send({'event': 'guess-reveal', 'plot': answer_to_reveal}, json=True, to=room.code)
     return "Success"
@@ -105,7 +105,7 @@ def vote():
 
     selected_plot = data.split('=')[-1][:-1]
 
-    if selected_plot == room.current_movie.plot:
+    if selected_plot == room.current_round.movie.plot:
         # Correct Guess - voter gets 2 points
         user.current_score += 2
         pass
@@ -162,7 +162,7 @@ def start_round():
             room.start_round()
 
             movie = Movie.get_random()
-            room.current_movie = movie
+            room.current_round.movie = movie
 
             # Send title & plot to host
             socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_judge.socket_client)
@@ -190,7 +190,7 @@ def open_guesses():
 
     # Send title to rest of users
     for guesser in room.guessers:
-        socketio.send({'event': 'movie-title', 'title': room.current_movie.title}, json=True,
+        socketio.send({'event': 'movie-title', 'title': room.current_round.movie.title}, json=True,
                       to=guesser.socket_client)
 
     return 'Opened guessing!'

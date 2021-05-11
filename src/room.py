@@ -23,7 +23,6 @@ class Room:
         self.code = Room.generate_code()
         self.current_judge = None
         self.started = False
-        self.current_movie = None
 
     def __repr__(self):
         return self.code
@@ -69,7 +68,7 @@ class Room:
         return all(user.current_answer for user in self.guessers)
 
     @property
-    def current_round(self):
+    def current_round(self) -> Round:
         """
         Gets the current (or most recent) round, if there is one.
 
@@ -127,8 +126,6 @@ class Room:
         for user in self.users:
             user.current_answer = None
 
-        self.current_movie = None
-
         self.select_next_judge()
 
     @staticmethod
@@ -152,7 +149,7 @@ class Room:
             'code': self.code,
             'host': self.host.serialize(),
             'judge': self.current_judge.serialize(full=full) if self.current_judge else '',
-            'movie': self.current_movie.serialize() if self.current_movie else '',
+            'round': self.current_round.serialize(full=full) if self.current_round else '',
             'started': str(self.started),
             'users': [user.serialize(full=full) for user in self.users]
         }
