@@ -178,6 +178,25 @@ def start_round():
     return 'Room not found'
 
 
+@app.route('/skipMovie', methods=['POST'])
+def skip_movie():
+    """
+    The judge didn't like the movie they were presented with, so give them a new one.
+
+    Returns:
+        str: response string
+    """
+    room = _get_room(request.args.get('code'))
+
+    movie = Movie.get_random()
+    room.current_round.movie = movie
+
+    # Send title & plot to host
+    socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_round.judge.socket_client)
+
+    return 'Started round!'
+
+
 @app.route('/openGuesses', methods=['POST'])
 def open_guesses():
     """

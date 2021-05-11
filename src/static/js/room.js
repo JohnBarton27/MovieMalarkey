@@ -136,7 +136,7 @@ function begin() {
 }
 
 function skipMovie() {
-    $.post('/startRound?code=' + room_code);
+    $.post('/skipMovie?code=' + room_code);
 }
 
 function displayHostGuessesTable(plot, revealButtons = false) {
