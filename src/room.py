@@ -1,11 +1,18 @@
 import random
 import string
+from enum import Enum
 
 from round import Round
 from user import User
 
 
-# TODO add Phase Enum to Room (instead of tracking in JavaScript, which will not properly handle refreshes)
+class Phase(Enum):
+    JOINING = 'JOINING'
+    SELECTING = 'SELECTING'
+    GUESSING = 'GUESSING'
+    VOTING = 'VOTING'
+
+
 class Room:
     """
     Class for representing "Rooms"
@@ -23,6 +30,7 @@ class Room:
         self.rounds = []
         self.code = Room.generate_code()
         self.started = False
+        self.phase = Phase.JOINING
 
     def __repr__(self):
         return self.code
@@ -107,6 +115,7 @@ class Room:
         """
         self.rounds.append(Round(self, len(self.rounds) + 1))
         self.current_round.judge = self.select_next_judge()
+        self.phase = Phase.SELECTING
 
     def end_round(self):
         """
@@ -143,7 +152,8 @@ class Room:
             'host': self.host.serialize(),
             'round': self.current_round.serialize(full=full) if self.current_round else '',
             'started': str(self.started),
-            'users': [user.serialize(full=full) for user in self.users]
+            'users': [user.serialize(full=full) for user in self.users],
+            'phase': self.phase.name
         }
 
     def start(self):

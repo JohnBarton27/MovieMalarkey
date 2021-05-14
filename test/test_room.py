@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import call, patch, MagicMock, PropertyMock
 
 from movie import Movie
-from room import Room
+from room import Room, Phase
 from user import User
 
 
@@ -30,6 +30,7 @@ class TestRoom(unittest.TestCase):
         # Defaults/empty
         self.assertEqual(room.rounds, [])
         self.assertFalse(room.started)
+        self.assertEqual(room.phase, Phase.JOINING)
 
     def test_repr(self):
         room = Room(TestRoom.user1)
@@ -208,6 +209,7 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(room.rounds[0].num, 1)
         self.assertEqual(room.rounds[1].num, 2)
         self.assertEqual(room.current_round.judge, user1)
+        self.assertEqual(room.phase, Phase.SELECTING)
         m_next_judge.assert_called()
 
     def test_end_round(self):
@@ -256,6 +258,7 @@ class TestRoom(unittest.TestCase):
         correct_serialized = {
             'code': 'ABCD',
             'host': {'name': 'USER1'},
+            'phase': 'JOINING',
             'round': '',
             'started': 'False',
             'users': [{'name': 'USER1'}]
@@ -275,6 +278,7 @@ class TestRoom(unittest.TestCase):
         correct_serialized = {
             'code': 'ABCD',
             'host': {'name': 'USER1'},
+            'phase': 'JOINING',
             'round': '',
             'started': 'False',
             'users': [{'name': 'USER1'}]
@@ -299,6 +303,7 @@ class TestRoom(unittest.TestCase):
         correct_serialized = {
             'code': 'ABCD',
             'host': {'name': 'USER1'},
+            'phase': 'JOINING',
             'round': {'number': '1'},
             'started': 'False',
             'users': [{'name': 'USER1'}]
@@ -308,6 +313,27 @@ class TestRoom(unittest.TestCase):
 
         m_user_serialize.assert_called()
         current_round.serialize.assert_called()
+
+    @patch('user.User.serialize')
+    def test_serialize_phase(self, m_user_serialize):
+        room = Room(TestRoom.user1)
+        room.code = 'ABCD'
+        room.phase = Phase.VOTING
+
+        m_user_serialize.return_value = {'name': 'USER1'}
+
+        correct_serialized = {
+            'code': 'ABCD',
+            'host': {'name': 'USER1'},
+            'phase': 'VOTING',
+            'round': '',
+            'started': 'False',
+            'users': [{'name': 'USER1'}]
+        }
+
+        self.assertEqual(room.serialize(), correct_serialized)
+
+        m_user_serialize.assert_called_with(full=False)
 
     def test_start(self):
         room = Room(TestRoom.user1)
