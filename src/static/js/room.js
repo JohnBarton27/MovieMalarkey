@@ -8,7 +8,6 @@ let userList = null;
 let startButtonElem = null;
 let currentPlot = null;
 let revealedGuesses = [];
-let phase = null;  // Phases: JOINING, SELECTING, GUESSING, VOTING
 
 let givenTitleElem = null;
 let plotAreaElem = null;
@@ -23,7 +22,6 @@ function initSockets() {
         if (data["event"] == "new-user") {
             setRoom(data['room']);
         } else if (data['event'] == "start-game") {
-            phase = "JOINING";
             setRoom(data['room']);
         } else if (data['event'] == "movie") {
             // Full Movie (for judge)
@@ -33,13 +31,11 @@ function initSockets() {
             checkForStart(data['plot']);
         } else if (data['event'] == "movie-title") {
             // Title only (for players)
-            phase = "GUESSING";
             displayTitle(data['title']);
             displayPlotInput();
         } else if (data['event'] == "user-answered") {
             setRoom(data['room']);
         } else if (data['event'] == "judge-selecting") {
-            phase = "SELECTING";
             setRoom(data['room']);
             displayWaitingForJudge();
         } else if (data['event'] == 'user-guess') {
@@ -49,7 +45,6 @@ function initSockets() {
             displayHostGuessesTable(room.round.movie.plot);
         } else if (data['event'] == 'all-guesses-submitted') {
             // All guesses have been submitted - we are almost ready to move to the "reading" phase
-            phase = "VOTING";
             updateUserList(); // Remove 'checks' from usernames
             prepareForReading();
         } else if (data['event'] == 'guess-reveal') {
@@ -88,7 +83,7 @@ function updateUserList() {
             className = `current-user`;
         }
 
-        if (this.hasAnswered === "True" && phase === "GUESSING") {
+        if (this.hasAnswered === "True" && room.phase === "GUESSING") {
             // If user has answered for the current round
             hasSubmitted = `<i class="fas fa-check"></i>`;
         }
@@ -266,7 +261,7 @@ function setRoom(inlineRoom) {
         }
     });
 
-    if (phase != "SELECTING" && room.round && room.round.movie
+    if (room.phase != "SELECTING" && room.round && room.round.movie
      && givenTitleElem.is(':empty')) {
         displayTitle(room.round.movie.title);
         if (myUsername === room.round.judge.name) {
