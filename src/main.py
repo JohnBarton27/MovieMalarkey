@@ -207,6 +207,7 @@ def open_guesses():
         Response
     """
     room = _get_room(request.cookies.get('room'))
+    room.open_guessing()
 
     # Send title to rest of users
     for guesser in room.current_round.guessers:

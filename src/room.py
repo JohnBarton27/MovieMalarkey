@@ -117,6 +117,15 @@ class Room:
         self.current_round.judge = self.select_next_judge()
         self.phase = Phase.SELECTING
 
+    def open_guessing(self):
+        """
+        Opens the guessing for users in the room. Progresses the phase to GUESSING.
+
+        Returns:
+            None
+        """
+        self.phase = Phase.GUESSING
+
     def end_round(self):
         """
         Cleanup method for when a round ends (clears all answers, etc.)

@@ -212,6 +212,13 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(room.phase, Phase.SELECTING)
         m_next_judge.assert_called()
 
+    def test_open_guessing(self):
+        room = Room(TestRoom.user1)
+
+        room.open_guessing()
+
+        self.assertEqual(room.phase, Phase.GUESSING)
+
     def test_end_round(self):
         room = Room(TestRoom.user1)
         user2 = User('User2')
