@@ -210,8 +210,7 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(room.current_round.judge, user1)
         m_next_judge.assert_called()
 
-    @patch('room.Room.select_next_judge')
-    def test_end_round(self, m_next_judge):
+    def test_end_round(self):
         room = Room(TestRoom.user1)
         user2 = User('User2')
         user3 = User('User3')
@@ -229,15 +228,11 @@ class TestRoom(unittest.TestCase):
 
         room.current_judge = user2
 
-        m_next_judge.return_value = None
-
         room.end_round()
 
         self.assertIsNone(TestRoom.user1.current_answer)
         self.assertIsNone(user2.current_answer)
         self.assertIsNone(user3.current_answer)
-
-        m_next_judge.assert_called()
 
     @patch('room.random.choice')
     def test_generate_code(self, m_choice):

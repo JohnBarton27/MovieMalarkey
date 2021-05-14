@@ -121,8 +121,6 @@ class Room:
         for user in self.users:
             user.current_answer = None
 
-        self.select_next_judge()
-
     @staticmethod
     def generate_code():
         """
