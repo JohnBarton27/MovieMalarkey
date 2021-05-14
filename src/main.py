@@ -195,7 +195,7 @@ def skip_movie():
     room.current_round.movie = movie
 
     # Send title & plot to host
-    socketio.send({'event': 'movie', 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_round.judge.socket_client)
+    socketio.send({'event': 'movie', 'room': room.serialize(), 'title': movie.title, 'plot': movie.plot}, json=True, to=room.current_round.judge.socket_client)
 
     return 'Started round!'
 
