@@ -219,6 +219,13 @@ class TestRoom(unittest.TestCase):
 
         self.assertEqual(room.phase, Phase.GUESSING)
 
+    def test_open_voting(self):
+        room = Room(TestRoom.user1)
+
+        room.open_voting()
+
+        self.assertEqual(room.phase, Phase.VOTING)
+
     def test_end_round(self):
         room = Room(TestRoom.user1)
         user2 = User('User2')

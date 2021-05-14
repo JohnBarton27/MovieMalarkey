@@ -126,6 +126,15 @@ class Room:
         """
         self.phase = Phase.GUESSING
 
+    def open_voting(self):
+        """
+        Opens the voting for users in eht room. Progresses the phase to VOTING.
+
+        Returns:
+            None
+        """
+        self.phase = Phase.VOTING
+
     def end_round(self):
         """
         Cleanup method for when a round ends (clears all answers, etc.)

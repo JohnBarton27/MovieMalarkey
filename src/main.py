@@ -81,6 +81,9 @@ def submit_guess():
 
     # All users have submitted
     if room.all_guesses_submitted:
+        # Progress room to the VOTING phase
+        room.open_voting()
+
         socketio.send({'event': 'all-guesses-submitted', 'room': room.serialize()}, json=True,
                       to=room.code)
 
