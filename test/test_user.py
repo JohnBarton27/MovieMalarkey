@@ -54,24 +54,38 @@ class TestUser(unittest.TestCase):
 
     def test_serialize(self):
         user = User('User123')
+        user.current_score = 0
         self.assertEqual(user.serialize(),
                          {'hasAnswered': 'False',
-                          'name': 'User123'})
+                          'name': 'User123',
+                          'score': '0'})
+
+    def test_serialize_score(self):
+        user = User('User123')
+        user.current_score = 4
+        self.assertEqual(user.serialize(),
+                         {'hasAnswered': 'False',
+                          'name': 'User123',
+                          'score': '4'})
 
     def test_serialize_full_no_answer(self):
         user = User('User123')
+        user.current_score = 0
         self.assertEqual(user.serialize(full=True),
                          {'currentAnswer': None,
                           'hasAnswered': 'False',
-                          'name': 'User123'})
+                          'name': 'User123',
+                          'score': '0'})
 
     def test_serialize_full_with_answer(self):
         user = User('User123')
         user.current_answer = 'A really good guess'
+        user.current_score = 0
         self.assertEqual(user.serialize(full=True),
                          {'currentAnswer': 'A really good guess',
                           'hasAnswered': 'True',
-                          'name': 'User123'})
+                          'name': 'User123',
+                          'score': '0'})
 
 
 if __name__ == '__main__':

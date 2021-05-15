@@ -42,7 +42,8 @@ class User:
         # This is what is seen by "default" (no cheating on guesses, etc.)
         serialized = {
             'hasAnswered': str(self.has_answered),
-            'name': self.name
+            'name': self.name,
+            'score': str(self.current_score)
         }
 
         if full:
