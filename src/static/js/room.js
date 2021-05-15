@@ -45,6 +45,7 @@ function initSockets() {
             displayHostGuessesTable(room.round.movie.plot);
         } else if (data['event'] == 'all-guesses-submitted') {
             // All guesses have been submitted - we are almost ready to move to the "reading" phase
+            setRoom(data['room']);
             updateUserList(); // Remove 'checks' from usernames
             prepareForReading();
         } else if (data['event'] == 'guess-reveal') {

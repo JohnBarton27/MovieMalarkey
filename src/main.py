@@ -84,8 +84,14 @@ def submit_guess():
         # Progress room to the VOTING phase
         room.open_voting()
 
-        socketio.send({'event': 'all-guesses-submitted', 'room': room.serialize()}, json=True,
-                      to=room.code)
+        # Send non-full room to guessers
+        for user in room.current_round.guessers:
+            socketio.send({'event': 'all-guesses-submitted', 'room': room.serialize()}, json=True,
+                          to=user.socket_client)
+
+        # Send full room to judge
+        socketio.send({'event': 'all-guesses-submitted', 'room': room.serialize(full=True)}, json=True,
+                      to=room.current_round.judge.socket_client)
 
     return 'Success'
 
