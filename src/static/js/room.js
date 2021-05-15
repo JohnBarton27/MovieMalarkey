@@ -70,6 +70,7 @@ function updateUserList() {
 
     // User List
     $.each(room.users, function() {
+        userListHtml += `<tr>`;
         let isJudge = ``;
         let className = ``;
         let hasSubmitted = ``;
@@ -89,7 +90,14 @@ function updateUserList() {
             hasSubmitted = `<i class="fas fa-check"></i>`;
         }
 
-        userListHtml += `<li class="${className}">${isJudge} ${this.name} ${hasSubmitted}</li>`;
+        userListHtml += `<td class="${className}">${isJudge} ${this.name} ${hasSubmitted}</td>`;
+
+        if (room.started === 'True') {
+            // Show scores if the game has started
+            userListHtml += `<td>${this.score}</td>`
+        }
+
+        userListHtml += `</tr>`;
     });
     userListElem.html(userListHtml);
 
