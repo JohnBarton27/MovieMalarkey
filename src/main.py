@@ -132,7 +132,7 @@ def vote():
     if room.current_round.all_votes_in:
         # This was the last voter - move to the reveal
         socketio.send({'event': 'full-reveal', 'room': room.serialize(full=True)}, json=True, to=room.code)
-        room.current_round.end()
+        room.end_round()
 
     return "Success"
 

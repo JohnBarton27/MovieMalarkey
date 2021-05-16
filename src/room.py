@@ -142,7 +142,7 @@ class Room:
         Returns:
             None
         """
-        self.rounds[-1].end()
+        self.current_round.end()
 
         # Wipe all answers
         for user in self.users:
