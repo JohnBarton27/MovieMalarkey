@@ -124,8 +124,9 @@ def vote():
     else:
         # Incorrect Guess
         for guesser in room.current_round.guessers:
-            if selected_plot == guesser.current_answer:
-                # 'guesser' gets one point for 'tricking' voter
+            if selected_plot == guesser.current_answer and user != guesser:
+                # 'guesser' gets one point for 'tricking' voter (unless they voted for their own answer, in which case
+                # they get nothing
                 room.current_round.give_points(1, guesser)
                 break
 
