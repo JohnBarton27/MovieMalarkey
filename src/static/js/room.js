@@ -196,13 +196,29 @@ function displayHostGuessesTable(plot, revealButtons = false) {
 }
 
 function displayGuessTable() {
-    let guessesTable = `<table><tr><th>Guess</th><th>Vote</th></tr>`;
+    let guessesTable = `<div>`;
 
     $.each(revealedGuesses, function(index) {
-        guessesTable += `<tr><td>${this}</td><td><button class="voteBtn" onclick="vote('${index}');">Vote!</button></td></tr>`;
+        let card = `<div class="column">
+            <span class="answer-card" onclick="vote('${index}');">
+                <p>${this}</p>
+            </span>
+        </div>`;
+        if (index%2 == 0) {
+            // Odd index (start of a row)
+            guessesTable += `<div class="row">${card}`;
+
+            // If this is the last index (we have an odd number of guesses), close out the row
+            if (index === revealedGuesses.length) {
+                guessesTable += `</div>`
+            }
+        } else {
+            // Even index (end of a row)
+            guessesTable += `${card}</div>`;
+        }
     });
 
-    guessesTable += `</table>`;
+    guessesTable += `</div>`;
 
     plotAreaElem.html(guessesTable);
 }

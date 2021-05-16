@@ -60,10 +60,13 @@ ul {
 
 .row {
     display: flex;
+    margin-bottom: 10px;
 }
 
 .column {
     flex: 50%;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .column-large {
@@ -90,4 +93,23 @@ ul {
     font-weight: bold;
     padding: 3px;
     border-radius: 3px;
+}
+
+
+.answer-card {
+    display: inline-block;
+    width: 100%;
+    background-color: #1D3557;
+    color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.answer-card:hover {
+    background-color: #335D99;
+    cursor: pointer;
+}
+
+.answer-card p {
+    margin: 15px;
 }
