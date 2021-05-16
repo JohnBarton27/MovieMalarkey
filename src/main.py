@@ -117,14 +117,14 @@ def vote():
 
     if selected_plot == room.current_round.movie.plot:
         # Correct Guess - voter gets 2 points
-        user.current_score += 2
+        room.current_round.give_points(2, user)
         pass
     else:
         # Incorrect Guess
         for guesser in room.current_round.guessers:
             if selected_plot == guesser.current_answer:
                 # 'guesser' gets one point for 'tricking' voter
-                guesser.current_score += 1
+                room.current_round.give_points(1, guesser)
                 break
 
     return "Success"
