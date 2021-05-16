@@ -33,6 +33,9 @@ function initSockets() {
             // Title only (for players)
             displayTitle(data['title']);
             displayPlotInput();
+
+            // Clear out 'revealedGuesses' from previous rounds
+            revealedGuesses = []
         } else if (data['event'] == "user-answered") {
             setRoom(data['room']);
         } else if (data['event'] == "judge-selecting") {
