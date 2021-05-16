@@ -70,6 +70,10 @@ class Round:
         for user in self.scores:
             user.current_score += self.scores[user]
 
+        # Clear who has voted
+        for user in self.room.users:
+            user.has_voted = False
+
     def serialize(self, full=False):
         return {
             'number': self.num,

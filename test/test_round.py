@@ -146,6 +146,44 @@ class TestRound(unittest.TestCase):
         self.assertEqual(TestRound.user2.current_score, 17)
         self.assertEqual(TestRound.user3.current_score, 21)
 
+        # Voting
+        self.assertFalse(TestRound.user1.has_voted)
+        self.assertFalse(TestRound.user2.has_voted)
+        self.assertFalse(TestRound.user3.has_voted)
+
+    def test_end_with_votes(self):
+        round1 = Round(TestRound.room1, 1)
+
+        scores = {
+            TestRound.user1: 3,
+            TestRound.user2: 2,
+            TestRound.user3: 1
+        }
+
+        # Set initial scores
+        TestRound.user1.current_score = 10
+        TestRound.user2.current_score = 15
+        TestRound.user3.current_score = 20
+
+        round1.scores = scores
+
+        # Set voting
+        TestRound.user1.has_voted = True
+        TestRound.user2.has_voted = True
+        TestRound.user3.has_voted = True
+
+        round1.end()
+
+        # New scores
+        self.assertEqual(TestRound.user1.current_score, 13)
+        self.assertEqual(TestRound.user2.current_score, 17)
+        self.assertEqual(TestRound.user3.current_score, 21)
+
+        # Voting
+        self.assertFalse(TestRound.user1.has_voted)
+        self.assertFalse(TestRound.user2.has_voted)
+        self.assertFalse(TestRound.user3.has_voted)
+
     def test_serialize_no_movie(self):
         round1 = Round(TestRound.room1, 1)
 

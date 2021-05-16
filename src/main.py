@@ -113,6 +113,8 @@ def vote():
     user = _get_user_from_room(request.args.get('username'), room)
     data = unquote(str(request.data))
 
+    user.has_voted = True
+
     selected_plot = data.split('=')[-1][:-1]
 
     if selected_plot == room.current_round.movie.plot:
