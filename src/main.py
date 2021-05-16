@@ -110,7 +110,7 @@ def reveal_guess():
 @app.route('/vote', methods=['POST'])
 def vote():
     room = _get_room(request.cookies.get('room'))
-    user = _get_user_from_room(request.args.get('username'), room)
+    user = _get_user_from_room(request.cookies.get('user_name'), room)
     data = unquote(str(request.data))
 
     user.has_voted = True
@@ -128,6 +128,10 @@ def vote():
                 # 'guesser' gets one point for 'tricking' voter
                 room.current_round.give_points(1, guesser)
                 break
+
+    if room.current_round.all_votes_in:
+        # This was the last voter - move to the reveal
+        socketio.send({'event': 'full-reveal', 'room': room.serialize(full=True)}, json=True, to=room.code)
 
     return "Success"
 
