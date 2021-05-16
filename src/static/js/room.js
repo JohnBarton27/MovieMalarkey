@@ -50,6 +50,13 @@ function initSockets() {
             prepareForReading();
         } else if (data['event'] == 'guess-reveal') {
             revealGuessToAll(data['plot']);
+        } else if (data['event'] == 'full-reveal') {
+            console.log(data['room']);
+
+            // If current judge, allow to end round
+            if (myUsername !== room.round.judge.name) {
+                showNextRoundButton();
+            }
         }
     });
 }
@@ -114,12 +121,19 @@ function updateUserList() {
     }
 }
 
+function showNextRoundButton() {
+    startButtonElem.html(`<button class="btn" onclick="nextRound()">Next Round</button>`);
+}
+
+function nextRound() {
+    $.post('/startRound?code=' + room_code);
+}
+
 function startGame() {
     $.get('/startGame?code=' + room_code, function(responseText) {
         responseRoom = responseText;
         setRoom(responseRoom);
     });
-
 }
 
 function displayTitle(title) {
