@@ -47,6 +47,16 @@ class Round:
 
         return guessers
 
+    @property
+    def all_votes_in(self):
+        """
+        Checks to see if all guessers have voted.
+
+        Returns:
+            bool: True if all guessers have voted (else, False)
+        """
+        return all(user.has_voted for user in self.guessers)
+
     def give_points(self, points: int, user):
         """
         Give points to the given user

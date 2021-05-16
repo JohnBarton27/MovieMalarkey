@@ -110,6 +110,33 @@ class TestRound(unittest.TestCase):
 
         self.assertEqual(guessers, [TestRound.user1, TestRound.user2, TestRound.user3])
 
+    def test_all_votes_in_no_votes(self):
+        round1 = Round(TestRound.room1, 1)
+        round1.judge = TestRound.user1
+
+        TestRound.user2.has_voted = False
+        TestRound.user3.has_voted = False
+
+        self.assertFalse(round1.all_votes_in)
+
+    def test_all_votes_in_some_votes(self):
+        round1 = Round(TestRound.room1, 1)
+        round1.judge = TestRound.user1
+
+        TestRound.user2.has_voted = True
+        TestRound.user3.has_voted = False
+
+        self.assertFalse(round1.all_votes_in)
+
+    def test_all_votes_in_all_votes(self):
+        round1 = Round(TestRound.room1, 1)
+        round1.judge = TestRound.user1
+
+        TestRound.user2.has_voted = True
+        TestRound.user3.has_voted = True
+
+        self.assertTrue(round1.all_votes_in)
+
     def test_give_points(self):
         round1 = Round(TestRound.room1, 1)
 
