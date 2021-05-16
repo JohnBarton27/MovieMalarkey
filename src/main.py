@@ -178,6 +178,7 @@ def start_round():
             # Found the room
             room.start_round()
 
+            # TODO Add handling to ensure the room doesn't ever see the same movie twice
             movie = Movie.get_random()
             room.current_round.movie = movie
 

@@ -156,6 +156,7 @@ class Room:
         Returns:
             str: Unique room code
         """
+        # TODO ensure certain words (curse words, etc.) are not given as room codes
         chars = string.ascii_uppercase
         for i in range(0, 10):
             chars += str(i)
