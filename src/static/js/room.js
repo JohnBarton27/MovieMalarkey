@@ -54,7 +54,7 @@ function initSockets() {
             console.log(data['room']);
 
             // If current judge, allow to end round
-            if (myUsername !== room.round.judge.name) {
+            if (myUsername === room.round.judge.name) {
                 showNextRoundButton();
             }
         }
