@@ -15,6 +15,7 @@ class User:
         self.current_score = 0
         self.socket_client = None
         self.current_answer = None
+        self.has_voted = False
 
     def __repr__(self):
         return str(self)
@@ -38,7 +39,6 @@ class User:
         return self.current_answer is not None
 
     def serialize(self, full=False):
-
         # This is what is seen by "default" (no cheating on guesses, etc.)
         serialized = {
             'hasAnswered': str(self.has_answered),

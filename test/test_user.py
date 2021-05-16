@@ -12,6 +12,7 @@ class TestUser(unittest.TestCase):
         # Defaults/empty
         self.assertEqual(user.current_score, 0)
         self.assertIsNone(user.current_answer)
+        self.assertFalse(user.has_voted)
 
     def test_repr(self):
         user = User('User123')
