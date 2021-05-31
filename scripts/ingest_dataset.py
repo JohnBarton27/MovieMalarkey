@@ -1,5 +1,6 @@
 import argparse
 from imdb import IMDb
+import os
 import pathlib
 
 
@@ -53,7 +54,11 @@ with open(args.filepath, 'r') as input_dataset:
     print(f'Started with {len(all_titles)} titles, ended with {len(valid_titles)} usable movies.')
 
     # Write valid titles to new file
-    with open(pathlib.Path.joinpath(movie_malarkey_loc, 'dataset/malarkey.tsv'), 'w') as dest_file:
+    dataset_dir = pathlib.Path.joinpath(movie_malarkey_loc, 'dataset')
+    if not os.path.exists(dataset_dir):
+        os.mkdir(dataset_dir)
+        
+    with open(pathlib.Path.joinpath(dataset_dir, 'malarkey.tsv'), 'w') as dest_file:
         dest_file.write(header + '\n')
 
         for valid_title in valid_titles:
