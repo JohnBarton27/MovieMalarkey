@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 
 from room import Room
 from round import Round
@@ -110,32 +110,35 @@ class TestRound(unittest.TestCase):
 
         self.assertEqual(guessers, [TestRound.user1, TestRound.user2, TestRound.user3])
 
-    def test_all_votes_in_no_votes(self):
+    @patch('user.User.has_voted', new_callable=PropertyMock)
+    def test_all_votes_in_no_votes(self, m_has_voted):
         round1 = Round(TestRound.room1, 1)
         round1.judge = TestRound.user1
 
-        TestRound.user2.has_voted = False
-        TestRound.user3.has_voted = False
+        m_has_voted.side_effect = [False, False]
 
         self.assertFalse(round1.all_votes_in)
+        m_has_voted.assert_called()
 
-    def test_all_votes_in_some_votes(self):
+    @patch('user.User.has_voted', new_callable=PropertyMock)
+    def test_all_votes_in_some_votes(self, m_has_voted):
         round1 = Round(TestRound.room1, 1)
         round1.judge = TestRound.user1
 
-        TestRound.user2.has_voted = True
-        TestRound.user3.has_voted = False
+        m_has_voted.side_effect = [True, False]
 
         self.assertFalse(round1.all_votes_in)
+        m_has_voted.assert_called()
 
-    def test_all_votes_in_all_votes(self):
+    @patch('user.User.has_voted', new_callable=PropertyMock)
+    def test_all_votes_in_all_votes(self, m_has_voted):
         round1 = Round(TestRound.room1, 1)
         round1.judge = TestRound.user1
 
-        TestRound.user2.has_voted = True
-        TestRound.user3.has_voted = True
+        m_has_voted.side_effect = [True, True]
 
         self.assertTrue(round1.all_votes_in)
+        m_has_voted.assert_called()
 
     def test_give_points(self):
         round1 = Round(TestRound.room1, 1)
@@ -174,9 +177,9 @@ class TestRound(unittest.TestCase):
         self.assertEqual(TestRound.user3.current_score, 21)
 
         # Voting
-        self.assertFalse(TestRound.user1.has_voted)
-        self.assertFalse(TestRound.user2.has_voted)
-        self.assertFalse(TestRound.user3.has_voted)
+        self.assertIsNone(TestRound.user1.current_vote)
+        self.assertIsNone(TestRound.user2.current_vote)
+        self.assertIsNone(TestRound.user3.current_vote)
 
     def test_end_with_votes(self):
         round1 = Round(TestRound.room1, 1)
@@ -195,9 +198,9 @@ class TestRound(unittest.TestCase):
         round1.scores = scores
 
         # Set voting
-        TestRound.user1.has_voted = True
-        TestRound.user2.has_voted = True
-        TestRound.user3.has_voted = True
+        TestRound.user1.current_vote = "A vote"
+        TestRound.user2.current_vote = "Another vote"
+        TestRound.user3.current_vote = "A vote"
 
         round1.end()
 
@@ -207,9 +210,9 @@ class TestRound(unittest.TestCase):
         self.assertEqual(TestRound.user3.current_score, 21)
 
         # Voting
-        self.assertFalse(TestRound.user1.has_voted)
-        self.assertFalse(TestRound.user2.has_voted)
-        self.assertFalse(TestRound.user3.has_voted)
+        self.assertIsNone(TestRound.user1.current_vote)
+        self.assertIsNone(TestRound.user2.current_vote)
+        self.assertIsNone(TestRound.user3.current_vote)
 
     def test_serialize_no_movie(self):
         round1 = Round(TestRound.room1, 1)

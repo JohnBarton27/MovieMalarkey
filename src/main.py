@@ -113,18 +113,16 @@ def vote():
     user = _get_user_from_room(request.cookies.get('user_name'), room)
     data = unquote(str(request.data))
 
-    user.has_voted = True
+    user.current_vote = data.split('=')[-1][:-1]
 
-    selected_plot = data.split('=')[-1][:-1]
-
-    if selected_plot == room.current_round.movie.plot:
+    if user.current_vote == room.current_round.movie.plot:
         # Correct Guess - voter gets 2 points
         room.current_round.give_points(2, user)
         pass
     else:
         # Incorrect Guess
         for guesser in room.current_round.guessers:
-            if selected_plot == guesser.current_answer and user != guesser:
+            if user.current_vote == guesser.current_answer and user != guesser:
                 # 'guesser' gets one point for 'tricking' voter (unless they voted for their own answer, in which case
                 # they get nothing
                 room.current_round.give_points(1, guesser)

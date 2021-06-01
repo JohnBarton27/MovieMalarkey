@@ -82,7 +82,7 @@ class Round:
 
         # Clear who has voted
         for user in self.room.users:
-            user.has_voted = False
+            user.current_vote = None
 
     def serialize(self, full=False):
         return {

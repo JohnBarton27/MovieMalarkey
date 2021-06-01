@@ -12,7 +12,7 @@ class TestUser(unittest.TestCase):
         # Defaults/empty
         self.assertEqual(user.current_score, 0)
         self.assertIsNone(user.current_answer)
-        self.assertFalse(user.has_voted)
+        self.assertIsNone(user.current_vote)
 
     def test_repr(self):
         user = User('User123')
@@ -53,13 +53,26 @@ class TestUser(unittest.TestCase):
 
         self.assertTrue(user.has_answered)
 
+    def test_has_voted_no_vote(self):
+        user = User('User123')
+        user.current_vote = None
+
+        self.assertFalse(user.has_voted)
+
+    def test_has_voted_voted(self):
+        user = User('User123')
+        user.current_vote = "A reasonable plot"
+
+        self.assertTrue(user.has_voted)
+
     def test_serialize(self):
         user = User('User123')
         user.current_score = 0
         self.assertEqual(user.serialize(),
                          {'hasAnswered': 'False',
                           'name': 'User123',
-                          'score': '0'})
+                          'score': '0',
+                          'vote': ''})
 
     def test_serialize_score(self):
         user = User('User123')
@@ -67,7 +80,8 @@ class TestUser(unittest.TestCase):
         self.assertEqual(user.serialize(),
                          {'hasAnswered': 'False',
                           'name': 'User123',
-                          'score': '4'})
+                          'score': '4',
+                          'vote': ''})
 
     def test_serialize_full_no_answer(self):
         user = User('User123')
@@ -76,7 +90,8 @@ class TestUser(unittest.TestCase):
                          {'currentAnswer': None,
                           'hasAnswered': 'False',
                           'name': 'User123',
-                          'score': '0'})
+                          'score': '0',
+                          'vote': ''})
 
     def test_serialize_full_with_answer(self):
         user = User('User123')
@@ -86,7 +101,20 @@ class TestUser(unittest.TestCase):
                          {'currentAnswer': 'A really good guess',
                           'hasAnswered': 'True',
                           'name': 'User123',
-                          'score': '0'})
+                          'score': '0',
+                          'vote': ''})
+
+    def test_serialize_full_with_vote(self):
+        user = User('User123')
+        user.current_answer = 'A really good guess'
+        user.current_score = 0
+        user.current_vote = 'Another really good guess'
+        self.assertEqual(user.serialize(full=True),
+                         {'currentAnswer': 'A really good guess',
+                          'hasAnswered': 'True',
+                          'name': 'User123',
+                          'score': '0',
+                          'vote': 'Another really good guess'})
 
 
 if __name__ == '__main__':
