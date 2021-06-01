@@ -108,6 +108,11 @@ ul {
     color: #ffffff;
 }
 
+.answer-card-revealed {
+    background-color: #1D3557;
+    color: #ffffff;
+}
+
 .answer-card-disabled {
     background-color: #335D99;
     color: #ffffff;

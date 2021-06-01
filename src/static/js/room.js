@@ -54,7 +54,8 @@ function initSockets() {
         } else if (data['event'] == 'guess-reveal') {
             revealGuessToAll(data['plot']);
         } else if (data['event'] == 'full-reveal') {
-            console.log(data['room']);
+            setRoom(data['room']);
+            fullReveal();
 
             // If current judge, allow to end round
             if (myUsername === room.round.judge.name) {
@@ -244,6 +245,28 @@ function revealGuess(username) {
 
     // Send signal to server
     $.post('/revealGuess?username=' + username);
+}
+
+function fullReveal() {
+    revealedHtml = `
+        <h3 style="margin-bottom: 5px;">Correct Plot</h3>
+        <div class="answer-card answer-card-revealed">
+            ${room.round.movie.plot}
+        </div>
+    `;
+
+    $.each(room.users, function() {
+        // Judge doesn't answer, so skip them
+        if (this.name !== room.round.judge.name) {
+            revealedHtml += `
+                <hr>
+                <h4 style="margin-bottom: 5px;">${this.name}</h4>
+                <div class="answer-card answer-card-revealed">${this.currentAnswer}</div>
+            `;
+        }
+    });
+
+    plotAreaElem.html(revealedHtml);
 }
 
 function lockInGuess(guess) {
