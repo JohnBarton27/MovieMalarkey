@@ -99,13 +99,21 @@ ul {
 .answer-card {
     display: inline-block;
     width: 100%;
-    background-color: #1D3557;
-    color: #ffffff;
     border-radius: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.answer-card:hover {
+.answer-card-enabled {
+    background-color: #1D3557;
+    color: #ffffff;
+}
+
+.answer-card-disabled {
+    background-color: #335D99;
+    color: #ffffff;
+}
+
+.answer-card-enabled:hover {
     background-color: #335D99;
     cursor: pointer;
 }

@@ -200,7 +200,7 @@ function displayGuessTable() {
 
     $.each(revealedGuesses, function(index) {
         let card = `<div class="column">
-            <span class="answer-card" onclick="vote('${index}');">
+            <span class="answer-card answer-card-enabled" onclick="vote('${index}');">
                 <p>${this}</p>
             </span>
         </div>`;
@@ -226,7 +226,8 @@ function displayGuessTable() {
 // Guesser submits a vote for the given plot
 function vote(guessIndex) {
     // Disable all vote buttons (user can only vote once per round)
-    $(".voteBtn").prop("disabled", true);
+    $(".answer-card").removeClass("answer-card-enabled");
+    $(".answer-card").addClass("answer-card-disabled");
 
     $.ajax({
         url: '/vote',
