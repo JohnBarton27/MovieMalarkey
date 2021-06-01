@@ -255,14 +255,33 @@ function fullReveal() {
         </div>
     `;
 
+    // Find all users who got it correct
+    revealedHtml += `<span style="display: flex; justify-content: flex-end">`;
+    $.each(room.users, function() {
+        if (this.vote === room.round.movie.plot) {
+            revealedHtml += `<span class="voter">${this.name}</span>`;
+        }
+    });
+    revealedHtml += `</span>`;
+
     $.each(room.users, function() {
         // Judge doesn't answer, so skip them
         if (this.name !== room.round.judge.name) {
+            let thisAnswer = this.currentAnswer;
             revealedHtml += `
                 <hr>
                 <h4 style="margin-bottom: 5px;">${this.name}</h4>
-                <div class="answer-card answer-card-revealed">${this.currentAnswer}</div>
+                <div class="answer-card answer-card-revealed">${thisAnswer}</div>
             `;
+
+            // Get all users who guessed this
+            revealedHtml += `<span style="display: flex; justify-content: flex-end">`;
+            $.each(room.users, function() {
+                if (this.vote === thisAnswer) {
+                    revealedHtml += `<span class="voter">${this.name}</span>`;
+                }
+            });
+            revealedHtml += `</span>`;
         }
     });
 
